@@ -1,0 +1,19 @@
+{
+  "name": "ffxiv-fanfest-note",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "test": "node tests/offline.mjs && node tests/functional.mjs",
+    "generate:summary": "node scripts/generate-summary.mjs",
+    "package": "python3 scripts/package.py"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

@@ -1,0 +1,464 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-28T11:18:53.995947+00:00",
+  "title": "Design System: FanFest Note",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Evergreen Ink",
+        "tonalRamp": [
+          "oklch(15% 0.0136 186.39)",
+          "oklch(25% 0.0250 186.39)",
+          "oklch(38% 0.0363 186.39)",
+          "oklch(50% 0.0454 186.39)",
+          "oklch(62% 0.0454 186.39)",
+          "oklch(74% 0.0363 186.39)",
+          "oklch(86% 0.0227 186.39)",
+          "oklch(95% 0.0091 186.39)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Quiet Evergreen",
+        "tonalRamp": [
+          "oklch(15% 0.0075 174.09)",
+          "oklch(25% 0.0137 174.09)",
+          "oklch(38% 0.0199 174.09)",
+          "oklch(50% 0.0249 174.09)",
+          "oklch(62% 0.0249 174.09)",
+          "oklch(74% 0.0199 174.09)",
+          "oklch(86% 0.0124 174.09)",
+          "oklch(95% 0.0050 174.09)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "tonalRamp": [
+          "oklch(15% 0.0029 93.57)",
+          "oklch(25% 0.0052 93.57)",
+          "oklch(38% 0.0076 93.57)",
+          "oklch(50% 0.0095 93.57)",
+          "oklch(62% 0.0095 93.57)",
+          "oklch(74% 0.0076 93.57)",
+          "oklch(86% 0.0048 93.57)",
+          "oklch(95% 0.0019 93.57)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Ivory Sheet",
+        "tonalRamp": [
+          "oklch(15% 0.0016 95.10)",
+          "oklch(25% 0.0030 95.10)",
+          "oklch(38% 0.0043 95.10)",
+          "oklch(50% 0.0054 95.10)",
+          "oklch(62% 0.0054 95.10)",
+          "oklch(74% 0.0043 95.10)",
+          "oklch(86% 0.0027 95.10)",
+          "oklch(95% 0.0011 95.10)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Sage Rule",
+        "tonalRamp": [
+          "oklch(15% 0.0050 133.83)",
+          "oklch(25% 0.0091 133.83)",
+          "oklch(38% 0.0133 133.83)",
+          "oklch(50% 0.0166 133.83)",
+          "oklch(62% 0.0166 133.83)",
+          "oklch(74% 0.0133 133.83)",
+          "oklch(86% 0.0083 133.83)",
+          "oklch(95% 0.0033 133.83)"
+        ]
+      },
+      "accent": {
+        "role": "secondary",
+        "displayName": "Rust Emphasis",
+        "tonalRamp": [
+          "oklch(15% 0.0425 34.41)",
+          "oklch(25% 0.0780 34.41)",
+          "oklch(38% 0.1135 34.41)",
+          "oklch(50% 0.1418 34.41)",
+          "oklch(62% 0.1418 34.41)",
+          "oklch(74% 0.1135 34.41)",
+          "oklch(86% 0.0709 34.41)",
+          "oklch(95% 0.0284 34.41)"
+        ]
+      },
+      "mint": {
+        "role": "primary",
+        "displayName": "Pale Sage",
+        "tonalRamp": [
+          "oklch(15% 0.0047 139.44)",
+          "oklch(25% 0.0087 139.44)",
+          "oklch(38% 0.0126 139.44)",
+          "oklch(50% 0.0158 139.44)",
+          "oklch(62% 0.0158 139.44)",
+          "oklch(74% 0.0126 139.44)",
+          "oklch(86% 0.0079 139.44)",
+          "oklch(95% 0.0032 139.44)"
+        ]
+      },
+      "focus": {
+        "role": "secondary",
+        "displayName": "Rust Focus",
+        "tonalRamp": [
+          "oklch(15% 0.0418 35.41)",
+          "oklch(25% 0.0767 35.41)",
+          "oklch(38% 0.1115 35.41)",
+          "oklch(50% 0.1394 35.41)",
+          "oklch(62% 0.1394 35.41)",
+          "oklch(74% 0.1115 35.41)",
+          "oklch(86% 0.0697 35.41)",
+          "oklch(95% 0.0279 35.41)"
+        ]
+      },
+      "ink-hover": {
+        "role": "primary",
+        "displayName": "Lifted Evergreen",
+        "tonalRamp": [
+          "oklch(15% 0.0149 182.08)",
+          "oklch(25% 0.0273 182.08)",
+          "oklch(38% 0.0397 182.08)",
+          "oklch(50% 0.0497 182.08)",
+          "oklch(62% 0.0497 182.08)",
+          "oklch(74% 0.0397 182.08)",
+          "oklch(86% 0.0248 182.08)",
+          "oklch(95% 0.0099 182.08)"
+        ]
+      },
+      "button-active": {
+        "role": "neutral",
+        "displayName": "Pressed Sage",
+        "tonalRamp": [
+          "oklch(15% 0.0077 139.83)",
+          "oklch(25% 0.0141 139.83)",
+          "oklch(38% 0.0205 139.83)",
+          "oklch(50% 0.0256 139.83)",
+          "oklch(62% 0.0256 139.83)",
+          "oklch(74% 0.0205 139.83)",
+          "oklch(86% 0.0128 139.83)",
+          "oklch(95% 0.0051 139.83)"
+        ]
+      },
+      "selection": {
+        "role": "neutral",
+        "displayName": "Soft Selection",
+        "tonalRamp": [
+          "oklch(15% 0.0117 140.46)",
+          "oklch(25% 0.0214 140.46)",
+          "oklch(38% 0.0311 140.46)",
+          "oklch(50% 0.0389 140.46)",
+          "oklch(62% 0.0389 140.46)",
+          "oklch(74% 0.0311 140.46)",
+          "oklch(86% 0.0195 140.46)",
+          "oklch(95% 0.0078 140.46)"
+        ]
+      },
+      "online": {
+        "role": "neutral",
+        "displayName": "Online Green",
+        "tonalRamp": [
+          "oklch(15% 0.0223 139.07)",
+          "oklch(25% 0.0408 139.07)",
+          "oklch(38% 0.0594 139.07)",
+          "oklch(50% 0.0742 139.07)",
+          "oklch(62% 0.0742 139.07)",
+          "oklch(74% 0.0594 139.07)",
+          "oklch(86% 0.0371 139.07)",
+          "oklch(95% 0.0148 139.07)"
+        ]
+      },
+      "note-divider": {
+        "role": "neutral",
+        "displayName": "Field-note Rule",
+        "tonalRamp": [
+          "oklch(15% 0.0087 143.67)",
+          "oklch(25% 0.0160 143.67)",
+          "oklch(38% 0.0233 143.67)",
+          "oklch(50% 0.0291 143.67)",
+          "oklch(62% 0.0291 143.67)",
+          "oklch(74% 0.0233 143.67)",
+          "oklch(86% 0.0146 143.67)",
+          "oklch(95% 0.0058 143.67)"
+        ]
+      },
+      "notice-bg": {
+        "role": "neutral",
+        "displayName": "Amber Paper",
+        "tonalRamp": [
+          "oklch(15% 0.0080 80.25)",
+          "oklch(25% 0.0147 80.25)",
+          "oklch(38% 0.0214 80.25)",
+          "oklch(50% 0.0267 80.25)",
+          "oklch(62% 0.0267 80.25)",
+          "oklch(74% 0.0214 80.25)",
+          "oklch(86% 0.0134 80.25)",
+          "oklch(95% 0.0053 80.25)"
+        ]
+      },
+      "notice-text": {
+        "role": "neutral",
+        "displayName": "Amber Ink",
+        "tonalRamp": [
+          "oklch(15% 0.0212 58.82)",
+          "oklch(25% 0.0388 58.82)",
+          "oklch(38% 0.0565 58.82)",
+          "oklch(50% 0.0706 58.82)",
+          "oklch(62% 0.0706 58.82)",
+          "oklch(74% 0.0565 58.82)",
+          "oklch(86% 0.0353 58.82)",
+          "oklch(95% 0.0141 58.82)"
+        ]
+      },
+      "empty-bg": {
+        "role": "neutral",
+        "displayName": "Empty-state Paper",
+        "tonalRamp": [
+          "oklch(15% 0.0036 116.81)",
+          "oklch(25% 0.0067 116.81)",
+          "oklch(38% 0.0097 116.81)",
+          "oklch(50% 0.0121 116.81)",
+          "oklch(62% 0.0121 116.81)",
+          "oklch(74% 0.0097 116.81)",
+          "oklch(86% 0.0060 116.81)",
+          "oklch(95% 0.0024 116.81)"
+        ]
+      },
+      "empty-border": {
+        "role": "neutral",
+        "displayName": "Empty-state Rule",
+        "tonalRamp": [
+          "oklch(15% 0.0073 149.31)",
+          "oklch(25% 0.0134 149.31)",
+          "oklch(38% 0.0195 149.31)",
+          "oklch(50% 0.0243 149.31)",
+          "oklch(62% 0.0243 149.31)",
+          "oklch(74% 0.0195 149.31)",
+          "oklch(86% 0.0122 149.31)",
+          "oklch(95% 0.0049 149.31)"
+        ]
+      },
+      "empty-icon": {
+        "role": "neutral",
+        "displayName": "Empty-state Sage",
+        "tonalRamp": [
+          "oklch(15% 0.0134 151.49)",
+          "oklch(25% 0.0246 151.49)",
+          "oklch(38% 0.0358 151.49)",
+          "oklch(50% 0.0448 151.49)",
+          "oklch(62% 0.0448 151.49)",
+          "oklch(74% 0.0358 151.49)",
+          "oklch(86% 0.0224 151.49)",
+          "oklch(95% 0.0090 151.49)"
+        ]
+      },
+      "saved-bg": {
+        "role": "secondary",
+        "displayName": "Blush Paper",
+        "tonalRamp": [
+          "oklch(15% 0.0069 56.95)",
+          "oklch(25% 0.0126 56.95)",
+          "oklch(38% 0.0184 56.95)",
+          "oklch(50% 0.0230 56.95)",
+          "oklch(62% 0.0230 56.95)",
+          "oklch(74% 0.0184 56.95)",
+          "oklch(86% 0.0115 56.95)",
+          "oklch(95% 0.0046 56.95)"
+        ]
+      },
+      "error": {
+        "role": "neutral",
+        "displayName": "Error Rust",
+        "tonalRamp": [
+          "oklch(15% 0.0407 30.08)",
+          "oklch(25% 0.0746 30.08)",
+          "oklch(38% 0.1085 30.08)",
+          "oklch(50% 0.1356 30.08)",
+          "oklch(62% 0.1356 30.08)",
+          "oklch(74% 0.1085 30.08)",
+          "oklch(86% 0.0678 30.08)",
+          "oklch(95% 0.0271 30.08)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Serif display",
+        "purpose": "Opening headline; bundled FanFestGuideSerif in Traditional Chinese, FanFestGuideSerifJP in Japanese."
+      },
+      "headline": {
+        "displayName": "Page headline",
+        "purpose": "Interior page titles with the matching bundled language subset."
+      },
+      "body": {
+        "displayName": "CJK sans-serif body",
+        "purpose": "Local fallback stack for reading and controls."
+      },
+      "time": {
+        "displayName": "Schedule time",
+        "purpose": "Tabular numerals in a dedicated time column."
+      },
+      "wordmark": {
+        "displayName": "Guide wordmark",
+        "purpose": "Bundled FanFestGuideSerif; bold FANFEST and regular NOTE."
+      },
+      "label": {
+        "displayName": "Label and detail copy",
+        "purpose": "Controls and compact descriptions; observed detail copy scales to 13px on phones."
+      }
+    },
+    "shadows": [
+      {
+        "name": "toast",
+        "value": "0 5px 25px #173f3b26",
+        "purpose": "Only the floating feedback toast; ordinary surfaces are flat."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-color",
+        "value": "background-color 0.18s ease, color 0.18s ease",
+        "purpose": "Buttons and links; disabled under prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone-max",
+        "value": "600px"
+      },
+      {
+        "name": "tablet-max",
+        "value": "800px"
+      },
+      {
+        "name": "desktop-min",
+        "value": "1100px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary local planning action; the 44px minimum height follows the implemented control.",
+      "html": "<button class=\"ds-button-primary\" type=\"button\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 4v16 M4 12h16\"/></svg>新增安排</button>",
+      "css": ".ds-button-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:\"Noto Sans TC\", \"Noto Sans JP\", \"PingFang TC\", \"Hiragino Kaku Gothic ProN\", \"Microsoft JhengHei\", sans-serif;font-size:14px;line-height:1.7;font-weight:400;border-radius:8px;min-height:44px;padding:9px 17px;cursor:pointer;text-decoration:none;transition:background-color .18s ease,color .18s ease;background:var(--ink,#173f3b);color:var(--surface,#fffefa);border:1px solid var(--ink,#173f3b)}.ds-button-primary:hover{background:#2c5750}.ds-button-primary:focus-visible{outline:3px solid var(--focus,#b14b31);outline-offset:4px;}.ds-button-primary:disabled{opacity:.5;cursor:not-allowed}.ds-button-primary svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}@media(prefers-reduced-motion:reduce){.ds-button-primary{transition:none}}"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined supporting action, including backup and official-source links.",
+      "html": "<button class=\"ds-button-secondary\" type=\"button\">匯出筆記備份</button>",
+      "css": ".ds-button-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:\"Noto Sans TC\", \"Noto Sans JP\", \"PingFang TC\", \"Hiragino Kaku Gothic ProN\", \"Microsoft JhengHei\", sans-serif;font-size:14px;line-height:1.7;font-weight:400;border-radius:8px;min-height:44px;padding:9px 17px;cursor:pointer;text-decoration:none;transition:background-color .18s ease,color .18s ease;background:transparent;color:var(--ink,#173f3b);border:1px solid var(--line,#d6ddd2)}.ds-button-secondary:hover{background:var(--mint,#e5ede3)}.ds-button-secondary:focus-visible{outline:3px solid var(--focus,#b14b31);outline-offset:4px;}.ds-button-secondary:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-button-secondary{transition:none}}"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Ivory text field with visible keyboard focus and rust caret.",
+      "html": "<label class=\"ds-field-label\">地點（選填）<input class=\"ds-field\" type=\"text\" placeholder=\"集合地點\"></label>",
+      "css": ".ds-field-label{display:flex;flex-direction:column;gap:5px;font-family:\"Noto Sans TC\", \"Noto Sans JP\", \"PingFang TC\", \"Hiragino Kaku Gothic ProN\", \"Microsoft JhengHei\", sans-serif;font-size:13px;line-height:1.7;color:var(--ink,#173f3b)}.ds-field{font-family:\"Noto Sans TC\", \"Noto Sans JP\", \"PingFang TC\", \"Hiragino Kaku Gothic ProN\", \"Microsoft JhengHei\", sans-serif;font-size:16px;line-height:1.7;background:var(--surface,#fffefa);color:var(--ink,#173f3b);border:1px solid var(--line,#d6ddd2);border-radius:8px;min-height:44px;padding:9px 12px;min-width:0;caret-color:var(--accent,#ad452d)}.ds-field:focus-visible{outline:3px solid var(--focus,#b14b31);outline-offset:4px;}"
+    },
+    {
+      "name": "Desktop navigation",
+      "kind": "nav",
+      "refersTo": "navigation-item",
+      "description": "Horizontal desktop destination links; mobile layout is specified in DESIGN.md.",
+      "html": "<nav class=\"ds-navigation\" aria-label=\"主要導覽\"><a href=\"#home\">總覽</a><a href=\"#schedule\" aria-current=\"page\">時間表</a><a href=\"#list\">我的清單</a></nav>",
+      "css": ".ds-navigation{display:flex;align-items:center;gap:32px;border-bottom:1px solid var(--line,#d6ddd2);font-family:\"Noto Sans TC\", \"Noto Sans JP\", \"PingFang TC\", \"Hiragino Kaku Gothic ProN\", \"Microsoft JhengHei\", sans-serif;color:var(--ink,#173f3b);line-height:1.7}.ds-navigation a{display:flex;align-items:center;min-height:68px;border-bottom:3px solid transparent;text-decoration:none;font-size:14px;white-space:nowrap;color:inherit;transition:color .18s ease}.ds-navigation a[aria-current=\"page\"]{border-color:var(--accent,#ad452d);color:var(--accent,#ad452d);font-weight:700}.ds-navigation a:hover{color:var(--accent,#ad452d)}.ds-navigation a:focus-visible{outline:3px solid var(--focus,#b14b31);outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-navigation a{transition:none}}"
+    },
+    {
+      "name": "Event-kind tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "A noninteractive label makes the personal or official nature of an event explicit.",
+      "html": "<span class=\"ds-tag\">個人安排</span>",
+      "css": ".ds-tag{display:inline-block;font-family:\"Noto Sans TC\", \"Noto Sans JP\", \"PingFang TC\", \"Hiragino Kaku Gothic ProN\", \"Microsoft JhengHei\", sans-serif;font-size:11px;line-height:1.7;color:var(--ink,#173f3b);background:var(--mint,#e5ede3);padding:2px 8px;border-radius:4px}"
+    },
+    {
+      "name": "Quiet panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Flat ivory container for a focused group of supporting information.",
+      "html": "<section class=\"ds-panel\"><h2>把筆記帶著走</h2><p>先連線開啟，確認離線可用。</p></section>",
+      "css": ".ds-panel{font-family:\"Noto Sans TC\", \"Noto Sans JP\", \"PingFang TC\", \"Hiragino Kaku Gothic ProN\", \"Microsoft JhengHei\", sans-serif;line-height:1.7;color:var(--ink,#173f3b);background:var(--surface,#fffefa);padding:25px;border-radius:var(--radius,14px)}.ds-panel h2{font-size:19px;margin:0 0 12px}.ds-panel p{font-size:14px;color:var(--muted,#52655f);margin:0}@media(max-width:600px){.ds-panel{padding:20px}}"
+    },
+    {
+      "name": "Field-note index",
+      "kind": "custom",
+      "refersTo": "field-note",
+      "description": "The signature sage index uses an asymmetric edge and quiet ruled links.",
+      "html": "<aside class=\"ds-field-note\"><h2>今天，從這裡開始</h2><a href=\"#schedule\"><span>看看節目時間<small lang=\"ja\">ステージ・タイムテーブル</small></span><span aria-hidden=\"true\">→</span></a><a href=\"#list\"><span>記下你的必做清單<small lang=\"ja\">マイリスト</small></span><span aria-hidden=\"true\">→</span></a></aside>",
+      "css": ".ds-field-note{font-family:\"Noto Sans TC\", \"Noto Sans JP\", \"PingFang TC\", \"Hiragino Kaku Gothic ProN\", \"Microsoft JhengHei\", sans-serif;line-height:1.7;color:var(--ink,#173f3b);padding:27px 30px;background:var(--mint,#e5ede3);border-radius:2px 20px 20px 2px;position:relative}.ds-field-note:before{content:\"\";position:absolute;left:-5px;top:18px;bottom:18px;width:1px;background:var(--line,#d6ddd2)}.ds-field-note h2{font-size:19px;margin:0 0 15px;font-weight:600}.ds-field-note a{display:flex;justify-content:space-between;gap:12px;text-decoration:none;font-size:14px;padding:12px 0;border-top:1px solid #bdcdbc;color:inherit;transition:color .18s ease}.ds-field-note small{font-size:11px;color:var(--muted,#52655f);display:block}.ds-field-note a:hover{color:var(--accent,#ad452d)}.ds-field-note a:focus-visible{outline:3px solid var(--focus,#b14b31);outline-offset:4px;}@media(max-width:800px){.ds-field-note{padding:20px}}@media(max-width:600px){.ds-field-note{padding:20px 22px;border-radius:var(--radius,14px)}.ds-field-note h2{font-size:17px}.ds-field-note a{padding:10px 0}.ds-field-note a:last-child{padding-bottom:0}}@media(prefers-reduced-motion:reduce){.ds-field-note a{transition:none}}"
+    },
+    {
+      "name": "Saved bookmark",
+      "kind": "button",
+      "refersTo": "save-button",
+      "description": "A circular toggle exposes saved state through its label, pressed attribute, filled icon, and color.",
+      "html": "<button class=\"ds-save\" type=\"button\" aria-pressed=\"true\" aria-label=\"移除收藏\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 3h12v18l-6-4-6 4z\"/></svg></button>",
+      "css": ".ds-save{width:44px;height:44px;min-width:44px;min-height:44px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line,#d6ddd2);background:transparent;color:var(--ink,#173f3b);cursor:pointer;transition:background-color .18s ease,color .18s ease}.ds-save svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}.ds-save:hover{background:var(--mint,#e5ede3)}.ds-save[aria-pressed=\"true\"]{color:var(--accent,#ad452d);background:#f3e3d8;border-color:#f3e3d8}.ds-save[aria-pressed=\"true\"] svg{fill:currentColor}.ds-save:focus-visible{outline:3px solid var(--focus,#b14b31);outline-offset:4px;}@media(prefers-reduced-motion:reduce){.ds-save{transition:none}}"
+    },
+    {
+      "name": "Activity disclosure",
+      "kind": "custom",
+      "refersTo": "activity-summary",
+      "description": "Numbered bilingual activity with a native expandable detail.",
+      "html": "<details class=\"ds-activity\"><summary><span class=\"ds-number\">6</span><span><strong>Nice Head Garden 遊戲庭園</strong><small lang=\"ja\">ナイスヘッド・ガーデン</small></span></summary><p>選擇活動後可查看條件、收藏，或在官方地圖找位置。</p></details>",
+      "css": ".ds-activity{border-bottom:1px solid var(--line,#d6ddd2);color:var(--ink,#173f3b);font-family:sans-serif}.ds-activity summary{display:flex;gap:16px;align-items:center;padding:20px 0;min-height:70px;cursor:pointer;list-style:none}.ds-number{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;border-radius:50%;background:var(--mint,#e5ede3);font-size:14px;font-weight:700}.ds-activity small{display:block;font-size:12px;color:var(--muted,#52655f)}.ds-activity p{font-size:14px;line-height:1.9}.ds-activity summary:hover{color:var(--accent,#ad452d)}.ds-activity summary:focus-visible{outline:3px solid var(--focus,#b14b31);outline-offset:4px}"
+    },
+    {
+      "name": "Map number index",
+      "kind": "custom",
+      "refersTo": "legend-row",
+      "description": "Large equivalent controls for locations on an official map.",
+      "html": "<div class=\"ds-map-index\"><button class=\"ds-map-row\" aria-pressed=\"true\"><span class=\"ds-number\">1</span><span>陸行鳥競賽 VR<small lang=\"ja\">チョコボレースVR</small></span></button><button class=\"ds-map-row\" aria-pressed=\"false\"><span class=\"ds-number\">2</span><span>選擇下一個地點<small>番号から内容を確認</small></span></button></div>",
+      "css": ".ds-map-index{color:var(--ink,#173f3b);font-family:sans-serif}.ds-map-row{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:12px 7px;background:transparent;border:0;border-bottom:1px solid var(--line,#d6ddd2);text-align:left;font-size:13px;color:inherit;cursor:pointer}.ds-map-row[aria-pressed=true],.ds-map-row:hover{background:var(--mint,#e5ede3)}.ds-map-row:focus-visible{outline:3px solid var(--focus,#b14b31);outline-offset:4px}.ds-number{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;background:var(--mint,#e5ede3);border-radius:50%;font-size:14px;font-weight:700}.ds-map-row small{display:block;font-size:10px;color:var(--muted,#52655f)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Pocket Field Guide",
+    "overview": "FanFest Note feels like a small festival booklet kept close at hand: warm paper, evergreen ink, quiet sage surfaces, and a restrained rust accent. Serif headings give the guide its editorial character; clear sans-serif text and line icons make repeated checking and planning easy.\n\nThe interface stays calm and practical. Lists use thin dividers and readable columns, with tonal panels reserved for useful groupings and status messages. This documents the implemented direction in `.impeccable/briefs/guide.md`; it does not claim that an image composition was approved.\n\nOfficial images retain their own map lettering and geometry inside this frame. The six-tab guide adds numbered location selection, dense activity disclosures and a bilingual downloadable timeline without replacing the established visual system.",
+    "keyCharacteristics": [
+      "Warm paper and evergreen ink with restrained rust emphasis.",
+      "Bilingual reading hierarchy with compact supporting labels.",
+      "Quiet tonal surfaces, thin dividers, and very little elevation.",
+      "Horizontal desktop wayfinding and persistent phone navigation.",
+      "Explicit visual states for saved items, completion, missing content, and errors.",
+      "Original official map numbers with an accessible index; exact bilingual timeline exports."
+    ],
+    "rules": [
+      {
+        "name": "The State Has a Label Rule",
+        "body": "Color supports a visible label, icon, border, or text treatment; it never carries status by itself.",
+        "section": "colors"
+      },
+      {
+        "name": "The Quiet Surface Rule",
+        "body": "Separate ordinary content with tone, spacing, and a thin divider before introducing a shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** use the existing paper, ink, sage, and rust roles before adding colors.",
+      "**Do** keep bilingual labels readable and let metadata remain quieter than titles.",
+      "**Do** preserve visible keyboard focus and text alongside status colors.",
+      "**Do** keep phone navigation and floating feedback clear of each other.",
+      "**Do** show missing content as an explained empty state with a useful next action.",
+      "**Do** preserve original map geometry and distinguish map-local numbers, shared activities, stage times and gathering times."
+    ],
+    "donts": [
+      "**Don't** add simulated paper textures or ornamental gradients to the field-guide surfaces.",
+      "**Don't** give ordinary rows and panels the toast's floating shadow.",
+      "**Don't** replace explicit personal, official, saved, or unavailable labels with color alone.",
+      "**Don't** assume body fallback fonts or glyphs outside the bundled serif subsets are available on every device.",
+      "**Don't** treat synthesized sidecar tonal ramps as additional implemented colors."
+    ]
+  }
+}
