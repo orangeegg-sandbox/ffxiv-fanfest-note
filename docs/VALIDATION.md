@@ -58,7 +58,9 @@ For the concert refinement, the documenter compared `DESIGN.md` and `.impeccable
 
 ## Release
 
-The concert package uses cache `2026-10-28-concerts-v7`: **72 precache assets**, **109 static site files**, and **26,632,386 precache bytes** (about 27 MB). ZIP integrity and precache asset coverage passed. `concerts.css`, the concert UI/data modules, and both official optimized WebPs are included. Publication verification is recorded below when the new release is deployed.
+The concert package uses cache `2026-10-28-concerts-v7`: **72 precache assets**, **109 static site files**, and **26,632,386 precache bytes** (about 27 MB). ZIP integrity and precache asset coverage passed. `concerts.css`, the concert UI/data modules, and both official optimized WebPs are included. Implementation commit `a230320` and deployment commit `1195137` were pushed. GitHub Pages reported that exact deployment commit (`1195137fc579533629ccd3d305a409b8495d4e8a`) built successfully.
+
+A fresh 390px browser on the public site confirmed `2026-10-28-concerts-v7`, Chinese/Japanese queue and admission text, selected chart concert details, and the provisional Haneda overlap. After an offline reload, piano directions remained readable, both official 3840px images decoded, and the entrance image opened in a new tab without network access. No JavaScript errors occurred. No cloud environment publication was performed.
 
 The previous Haneda/map package used cache `2026-10-28-haneda-v6`, with **67 precache assets**. Package verification found **104 static site files**, and ZIP integrity passed. `map-tabs.css` and `ui/map-tabs.js` are included in both the package and complete offline cache. Implementation commit `c64adda` and deployment commit `be93da8` were pushed; GitHub Pages reported that exact deployment commit built successfully. For that release, the public service worker served `2026-10-28-haneda-v6`.
 
