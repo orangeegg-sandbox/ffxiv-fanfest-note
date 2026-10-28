@@ -1,13 +1,19 @@
 /* Bump VERSION whenever a bundled asset changes before deployment. */
-const VERSION = "2026-10-28-official-v3";
+const VERSION = "2026-10-28-guide-v4";
 const APP_FILES = [
   "./index.html",
   "./styles.css",
+  "./schedule.css",
+  "./guide.css",
   "./app.js",
+  "./ui/schedule.js",
+  "./ui/preparation.js",
   "./data/events.js",
   "./data/stages.js",
   "./data/activities.js",
   "./data/summary.js",
+  "./data/apps.js",
+  "./data/transport.js",
   "./manifest.webmanifest",
   "./icons/icon.svg",
   "./fonts/guide-serif-zh.woff",

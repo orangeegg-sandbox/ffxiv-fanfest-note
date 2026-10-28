@@ -1,0 +1,85 @@
+/* Reading and preparation surfaces share the field guide's existing palette. */
+.view-switch { display: flex; flex-wrap: wrap; gap: 4px; width: fit-content; max-width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 4px; }
+.view-switch button { border: 0; border-radius: 5px; padding: 10px 16px; min-height: 44px; background: transparent; font-size: 14px; }
+.view-switch button:hover { background: var(--mint); }
+.view-switch button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.guide-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 26px; }
+.text-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14px; }
+.section-nav { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 12px 0 20px; border-bottom: 1px solid var(--line); }
+.section-nav a { padding: 12px 0; min-height: 44px; font-size: 14px; text-decoration: none; }
+.section-nav a[aria-current] { color: var(--accent); font-weight: 700; border-bottom: 2px solid currentColor; }
+.reading-copy { max-width: 68ch; }
+.reading-copy p { margin: 0 0 12px; line-height: 1.9; font-size: 15px; color: var(--ink); white-space: normal; }
+.reading-copy p:last-child { margin-bottom: 0; }
+.reading-list { margin: 12px 0 0; padding-left: 1.3em; max-width: 68ch; font-size: 15px; line-height: 1.85; }
+.reading-list li { padding-left: 3px; margin: 0 0 12px; overflow-wrap: anywhere; }
+.reading-list li:last-child { margin-bottom: 0; }
+.reading-list li::marker { color: var(--muted); }
+.event-meta { display: grid; gap: 3px; margin: 10px 0 14px; }
+.event-row .reading-copy { margin: 14px 0 18px; }
+.event-row .reading-copy p { font-size: 14px; }
+.activity-place { display: flex; gap: 8px; align-items: flex-start; color: var(--muted); font-size: 14px; margin: 16px 0 24px; }
+.activity-place svg { width: 18px; height: 22px; }
+.activity-detail section { margin: 24px 0; }
+.activity-detail section h3 { font-size: 15px; margin: 0 0 12px; font-weight: 700; }
+.activity-detail section h3 small { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 6px; }
+.activity-hours dl { margin: 0; max-width: 460px; border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.activity-hours dl > div { display: grid; grid-template-columns: 72px 1fr; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.activity-hours dt { color: var(--muted); }
+.activity-hours dd { margin: 0; }
+.activity-hours dd small { display: block; font-size: 13px; margin-top: 4px; }
+.activity-apps { background: var(--mint); padding: 18px 20px; border-radius: 8px; margin: 24px 0; }
+.activity-apps strong { font-size: 15px; }
+.activity-detail .reading-copy p, .practical-item .reading-copy p, .reservation-grid .reading-copy p { font-size: 15px; }
+.app-guide, .transport-guide { max-width: 950px; }
+.guide-intro { max-width: 68ch; font-size: 15px; line-height: 1.85; margin: 24px 0; }
+.guide-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 32px; }
+.guide-jump button { min-height: 44px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; font-size: 14px; }
+.guide-jump button:hover { background: var(--mint); }
+.guide-section { margin: 40px 0 48px; scroll-margin-top: 24px; }
+.guide-section > h2 { font-size: 23px; margin: 0 0 12px; }
+.app-entry { display: grid; grid-template-columns: minmax(180px, .8fr) minmax(0, 2fr); gap: 32px; padding: 28px 0; border-bottom: 1px solid var(--line); }
+.app-heading h3 { margin: 0 0 12px; font-size: 19px; line-height: 1.5; overflow-wrap: anywhere; }
+.app-scope { margin: 0; color: var(--accent); font-size: 14px; line-height: 1.75; }
+.app-instructions > p { margin: 0 0 18px; font-size: 15px; max-width: 68ch; }
+.guide-note { background: var(--mint); padding: 16px 20px; border-radius: 8px; margin: 20px 0; }
+.guide-note .reading-list { margin-top: 0; font-size: 14px; }
+.guide-links { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 22px; margin-top: 16px; }
+.guide-links a, .guide-source { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; font-size: 14px; }
+.guide-links a { font-weight: 600; }
+.guide-source { color: var(--muted); font-size: 12px; }
+.app-activities { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.transport-route { padding: 28px 0; border-bottom: 1px solid var(--line); }
+.route-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 18px; margin-bottom: 18px; }
+.route-heading h3 { font-size: 20px; margin: 0; }
+.route-steps { padding-left: 1.6em; }
+.route-steps li { padding-left: 8px; }
+.route-steps li::marker { font-weight: 700; color: var(--ink); }
+.guide-verified { font-size: 12px; color: var(--muted); max-width: 85ch; }
+.airport-checklist .button { margin-top: 24px; }
+.transport-alert { background: var(--mint); border-radius: 14px; padding: 24px; margin: 24px 0; max-width: 950px; }
+.transport-alert h2 { font-size: 20px; margin: 0 0 10px; }
+.transport-alert p { max-width: 68ch; font-size: 15px; margin: 0 0 18px; }
+.bus-table { border-collapse: collapse; width: 100%; max-width: 650px; font-size: 15px; font-variant-numeric: tabular-nums; }
+.bus-table caption { text-align: left; margin: 0 0 12px; font-size: 15px; font-weight: 600; }
+.bus-table th { font-size: 13px; font-weight: 500; background: var(--mint); }
+.bus-table th, .bus-table td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); width: 33.333%; }
+.bus-table tbody tr:last-child { color: var(--accent); }
+@media (max-width: 600px) {
+  .view-switch { width: 100%; flex-wrap: nowrap; }
+  .view-switch button { flex: 1; padding: 10px 8px; font-size: 13px; }
+  .guide-toolbar { display: block; }
+  .guide-toolbar .text-link { margin-top: 12px; }
+  .app-entry { grid-template-columns: 1fr; gap: 18px; }
+  .guide-section > h2 { font-size: 21px; }
+  .guide-jump { gap: 8px; }
+  .guide-jump button { padding: 8px 12px; font-size: 13px; }
+  .guide-note { padding: 16px; }
+  .activity-detail .event-actions { margin-top: 24px; }
+  .event-row { position: relative; grid-template-columns: 60px minmax(0, 1fr); gap: 14px; }
+  .event-row > .save-button { position: absolute; top: 18px; right: 0; }
+  .event-row .tag { max-width: calc(100% - 42px); min-height: 27px; }
+  .agenda-entries .save-button { margin-top: 0; }
+  .transport-alert { padding: 20px; }
+  .bus-table th, .bus-table td { padding: 10px 7px; }
+}

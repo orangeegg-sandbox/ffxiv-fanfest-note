@@ -1,0 +1,286 @@
+/* The agenda and chart share the guide's paper, evergreen and rust palette. */
+.schedule-view-switch {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0;
+}
+.schedule-view-switch button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
+}
+.agenda-day {
+  margin: 28px 0 40px;
+}
+.agenda-day .date-label {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 16px;
+}
+.agenda-day .date-label small {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.agenda-entries {
+  position: relative;
+}
+.agenda-entries::before {
+  content: "";
+  position: absolute;
+  left: 98px;
+  top: 32px;
+  bottom: 26px;
+  width: 1px;
+  background: var(--line);
+}
+.agenda-entries .event-row {
+  position: relative;
+  column-gap: 28px;
+}
+.agenda-entries .event-time::after {
+  content: "";
+  position: absolute;
+  left: 94px;
+  top: 33px;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  background: var(--paper);
+}
+.chart-caption p {
+  margin: 5px 0;
+  max-width: 75ch;
+}
+.chart-caption {
+  margin: 18px 0;
+}
+.chart-scroll {
+  overflow: auto;
+  max-height: 75vh;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  scrollbar-color: var(--muted) var(--mint);
+  scrollbar-width: thin;
+  overscroll-behavior: contain;
+  padding-bottom: 18px;
+}
+.chart-grid {
+  display: grid;
+  width: max-content;
+  min-width: 100%;
+  isolation: isolate;
+}
+.chart-corner,
+.chart-day-title {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--mint);
+  border-bottom: 1px solid var(--line);
+  margin: 0;
+  padding: 10px 12px;
+  line-height: 1.5;
+  min-height: 64px;
+}
+.chart-corner {
+  left: 0;
+  z-index: 5;
+  align-content: center;
+  font-size: 12px;
+  text-align: center;
+  padding: 10px 0;
+}
+.chart-day-title {
+  font-size: 17px;
+  border-left: 1px solid var(--line);
+}
+.chart-day-title small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+.chart-axis {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.chart-tick {
+  position: absolute;
+  right: 7px;
+  line-height: 1;
+  padding-top: 4px;
+}
+.chart-day {
+  position: relative;
+  min-width: 0;
+  border-left: 1px solid var(--line);
+}
+.chart-hour-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-top: 1px solid var(--line);
+}
+.chart-event {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  overflow: hidden;
+  text-align: left;
+  border: 1px solid var(--ink);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: var(--ink);
+  background: var(--mint);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.chart-event:hover,
+.chart-event[aria-expanded="true"] {
+  background: var(--ink);
+  color: var(--surface);
+}
+.chart-event strong {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  flex-shrink: 0;
+}
+.chart-event-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.chart-event-jp,
+.chart-event-kind {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.chart-event-jp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.chart-event-kind {
+  margin-top: auto;
+}
+.chart-personal {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--paper);
+  border-style: dashed;
+}
+.chart-short {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 0 5px;
+  font-size: 11px;
+}
+.chart-short .chart-event-time {
+  font-size: 10px;
+}
+.chart-short strong {
+  -webkit-line-clamp: 1;
+  flex-shrink: 1;
+}
+.chart-short .chart-event-jp,
+.chart-short .chart-event-kind {
+  display: none;
+}
+.chart-no-events {
+  margin: 20px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.chart-detail {
+  margin: 22px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 20px;
+}
+.chart-detail > p {
+  color: var(--muted);
+  font-size: 14px;
+}
+.chart-detail .event-row {
+  border-bottom: 0;
+}
+.chart-unbounded {
+  margin: 32px 0;
+}
+.chart-unbounded h2 {
+  font-size: 21px;
+}
+.chart-text-alternative {
+  margin: 24px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.chart-text-alternative > summary {
+  cursor: pointer;
+  padding: 16px 0;
+  font-weight: 650;
+}
+@media (max-width: 600px) {
+  .agenda-entries::before {
+    left: 67px;
+  }
+  .agenda-entries .event-row {
+    grid-template-columns: 58px minmax(0, 1fr);
+    column-gap: 22px;
+  }
+  .agenda-entries .event-time::after {
+    left: 63px;
+    top: 31px;
+  }
+  .agenda-entries .save-button {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: -12px;
+  }
+  .agenda-day .date-label {
+    display: block;
+  }
+  .agenda-day .date-label small {
+    display: block;
+    margin-top: 4px;
+  }
+  .chart-caption {
+    font-size: 14px;
+  }
+  .chart-scroll {
+    max-height: 68vh;
+  }
+}
+@media print {
+  .chart-scroll {
+    max-height: none;
+    overflow: visible;
+  }
+  .chart-day-title,
+  .chart-corner,
+  .chart-axis {
+    position: relative;
+  }
+  .schedule-view-switch {
+    display: none;
+  }
+}

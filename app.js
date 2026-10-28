@@ -1,4 +1,7 @@
 import { eventData as data } from "./data/events.js";
+import { appGuide } from "./data/apps.js";
+import { renderTimetable } from "./ui/schedule.js";
+import { renderApps, renderTransport } from "./ui/preparation.js";
 const $ = (s) => document.querySelector(s);
 const icons = {
   home: "M3 10 12 3l9 7v11H3z M9 21v-8h6v8",
@@ -68,6 +71,7 @@ function validPersonal(p) {
 const loaded = read();
 const state = {
   lang: loaded.lang === "ja" ? "ja" : "zh",
+  scheduleMode: loaded.scheduleMode === "chart" ? "chart" : "agenda",
   saved: Array.isArray(loaded.saved)
     ? loaded.saved.filter((x) => typeof x === "string")
     : [],
@@ -93,7 +97,10 @@ let page = location.hash.slice(1) || "home",
   selectedActivityId = "",
   selectedPointIndex = null,
   activityQuery = "",
-  activityMap = "";
+  activityMap = "",
+  activityView = "events",
+  tldrView = "timeline",
+  selectedChartEvent = "";
 const tx = (zh, ja) => (state.lang === "ja" ? ja : zh);
 const loc = (o) =>
   typeof o === "string" ? o : o?.[state.lang] || o?.ja || o?.zh || "";
@@ -126,6 +133,25 @@ function toast(message) {
 const source = (id) => data.sources.find((x) => x.id === id);
 const sourceLink = (id) =>
   `<a class="button secondary" href="${source(id).url}" target="_blank" rel="noopener noreferrer">${esc(loc(source(id).title))} · ${tx("官方原文", "公式サイト")}${icon("external")}</a>`;
+const sentences = (value) => String(value || "").split(/(?<=[。！？])\s*|\n+/u).map(s => s.trim()).filter(Boolean);
+const readingCopy = (value) => `<div class="reading-copy">${sentences(loc(value)).map(s => `<p>${esc(s)}</p>`).join("")}</div>`;
+function activityNotes(value) {
+  let text = loc(value);
+  const hours = [];
+  text = text.replace(/(10\/31|11\/1)\s+(\d{1,2}:\d{2}\s*[-–〜~]\s*\d{1,2}:\d{2})(\s*※[^\s]*?\d{1,2}:\d{2})?/gu, (_, date, time, cutoff = "") => {
+    hours.push({ date, time, cutoff: cutoff.trim() });
+    return " ";
+  });
+  text = text.replace(/(兩日皆於結束前 30 分鐘停止受理|両日とも、最終受付は終了30分前)\s*/gu, "$1。 ");
+  const notes = sentences(text);
+  return `${hours.length ? `<section class="activity-hours"><h3>${tx("開放時間", "開催時間")} <small>JST</small></h3><dl>${hours.map(h => `<div><dt>${esc(h.date)}</dt><dd>${esc(h.time)}${h.cutoff ? `<small>${esc(h.cutoff)}</small>` : ""}</dd></div>`).join("")}</dl></section>` : ""}${notes.length ? `<section class="activity-conditions"><h3>${tx("參加前須知", "参加前に確認")}</h3><ul class="reading-list">${notes.map(s => `<li>${esc(s)}</li>`).join("")}</ul></section>` : ""}`;
+}
+function viewSwitch(attribute, selected, items, label) {
+  return `<div class="view-switch" role="group" aria-label="${esc(label)}">${items.map(([value, text]) => `<button type="button" ${attribute}="${value}" aria-pressed="${selected === value}">${esc(text)}</button>`).join("")}</div>`;
+}
+function mapTransportNav() {
+  return `<nav class="section-nav" aria-label="${tx("地圖與交通", "マップ・アクセス")}"><a href="#map" ${page === "map" ? 'aria-current="page"' : ""}>${tx("會場地圖", "会場マップ")}</a><a href="#transport" ${page === "transport" ? 'aria-current="page"' : ""}>${tx("交通・成田機場", "アクセス・成田空港")}</a></nav>`;
+}
 const defaults = [
   {
     id: "ticket",
@@ -194,7 +220,7 @@ function sourceRows() {
   return `<div class="source-list">${data.sources.map((s, i) => `<a class="source-row" href="${s.url}" target="_blank" rel="noopener noreferrer"><span class="source-symbol">${icon(["calendar", "list", "spark", "map"][i])}</span><span><strong>${esc(loc(s.title))}</strong><small>${state.lang === "zh" ? esc(s.title.ja) + " · " : ""}${tx("官方日文頁面 · 需連線", "公式ページ · オンライン")}</small></span><span class="arrow">${icon("external")}</span></a>`).join("")}</div>`;
 }
 function home() {
-  return `<section class="hero"><div><h1>${tx("你的 FanFest<br><em>隨行筆記。</em>", "ファンフェスを、<br><em>手のひらに。</em>")}</h1><p>${tx("舞台節目、會場活動與自己的待辦。<br>整理好再出發，現場隨手查。", "ステージ、会場のアクティビティ、自分の予定。<br>出かける前にまとめて、会場でさっと確認。")}</p><div class="event-dates">10.31 <small>SAT</small> <span>—</span> 11.01 <small>SUN</small></div><div class="edition"><b>JAPAN 2026</b><span>FINAL FANTASY XIV FAN FESTIVAL</span></div></div><aside class="field-note"><h2>${tx("今天，從這裡開始", "まずは、ここから")}</h2><a href="#tldr"><span>${tx("兩天重點，一張帶走", "2日間の早見表を保存")}<small>${tx("繁中・日文時間表圖片", "中国語・日本語のタイムライン")}</small></span>${icon("download")}</a><a href="#schedule"><span>${tx("看看節目時間", "ステージの予定を確認")}<small>ステージ・タイムテーブル</small></span>${icon("arrow")}</a><a href="#map"><span>${tx("找到下一個目的地", "次の目的地を探す")}<small>会場マップ</small></span>${icon("arrow")}</a><a href="#list"><span>${tx("記下你的必做清單", "やりたいことをメモ")}<small>マイリスト</small></span>${icon("arrow")}</a></aside></section>${notice()}<div class="venue-strip">${icon("pin")}<span>${tx("幕張展覽館 1–7 展廳・AEON MALL 幕張新都心・豐砂公園", "幕張メッセ 1〜7ホール・イオンモール幕張新都心・豊砂公園")}<small>${tx("10/31、11/1 皆為 09:00 開場／21:00 結束（預定）", "両日 09:00 開場／21:00 終了予定")}</small></span></div><div class="home-grid"><section><div class="section-heading"><h2>${tx("官方資訊，一次找到", "公式情報へのリンク")}</h2><span>${tx("日文原文", "公式サイト")}</span></div>${sourceRows()}</section><section><div class="section-heading"><h2>${tx("出發前的小準備", "出発前のチェック")}</h2><a href="#list">${tx("全部清單", "すべて見る")} →</a></div>${checkRows(defaults.slice(0, 3))}<p class="small">${tx("這是個人準備建議；正式入場規定請以官方公告為準。", "個人向けの準備メモです。入場条件は公式案内をご確認ください。")}</p><div class="info-block"><h3>${tx("把筆記帶著走", "オフラインでも手元に")}</h3><p>${tx("首次連線開啟後，網站會儲存已收錄的內容、六張官方地圖與懶人包（約 24 MB）。看到「已可離線使用」後，即可在沒訊號時查閱。外部網站仍需網路。", "初回オンライン時に収録済みの内容、公式マップ6枚、早見表（約24 MB）を保存します。「オフライン利用可能」と表示されたら、電波がなくても読めます。外部サイトには接続が必要です。")}</p><div class="status-line" id="offline-status"></div></div></section></div>${practicalInfo()}`;
+  return `<section class="hero"><div><h1>${tx("你的 FanFest<br><em>隨行筆記。</em>", "ファンフェスを、<br><em>手のひらに。</em>")}</h1><p>${tx("舞台節目、會場活動與自己的待辦。<br>整理好再出發，現場隨手查。", "ステージ、会場のアクティビティ、自分の予定。<br>出かける前にまとめて、会場でさっと確認。")}</p><div class="event-dates">10.31 <small>SAT</small> <span>—</span> 11.01 <small>SUN</small></div><div class="edition"><b>JAPAN 2026</b><span>FINAL FANTASY XIV FAN FESTIVAL</span></div></div><aside class="field-note"><h2>${tx("今天，從這裡開始", "まずは、ここから")}</h2><a href="#tldr"><span>${tx("兩天重點，一張帶走", "2日間の早見表を保存")}<small>${tx("繁中・日文時間表圖片", "中国語・日本語のタイムライン")}</small></span>${icon("download")}</a><a href="#schedule"><span>${tx("看看節目時間", "ステージの予定を確認")}<small>ステージ・タイムテーブル</small></span>${icon("arrow")}</a><a href="#map"><span>${tx("找到下一個目的地", "次の目的地を探す")}<small>会場マップ</small></span>${icon("arrow")}</a><a href="#transport"><span>${tx("去程、散場與成田機場", "行き帰り・成田空港へ")}<small>${tx("車站、巴士與機場路線", "駅・バス・空港へのルート")}</small></span>${icon("arrow")}</a><a href="#list"><span>${tx("記下你的必做清單", "やりたいことをメモ")}<small>マイリスト</small></span>${icon("arrow")}</a></aside></section>${notice()}<div class="venue-strip">${icon("pin")}<span>${tx("幕張展覽館 1–7 展廳・AEON MALL 幕張新都心・豐砂公園", "幕張メッセ 1〜7ホール・イオンモール幕張新都心・豊砂公園")}<small>${tx("10/31、11/1 皆為 09:00 開場／21:00 結束（預定）", "両日 09:00 開場／21:00 終了予定")}</small></span></div><div class="home-grid"><section><div class="section-heading"><h2>${tx("官方資訊，一次找到", "公式情報へのリンク")}</h2><span>${tx("日文原文", "公式サイト")}</span></div>${sourceRows()}</section><section><div class="section-heading"><h2>${tx("出發前的小準備", "出発前のチェック")}</h2><a href="#list">${tx("全部清單", "すべて見る")} →</a></div>${checkRows(defaults.slice(0, 3))}<p class="small">${tx("這是個人準備建議；正式入場規定請以官方公告為準。", "個人向けの準備メモです。入場条件は公式案内をご確認ください。")}</p><div class="info-block"><h3>${tx("把筆記帶著走", "オフラインでも手元に")}</h3><p>${tx("首次連線開啟後，網站會儲存已收錄的內容、六張官方地圖與懶人包（約 24 MB）。看到「已可離線使用」後，即可在沒訊號時查閱。外部網站仍需網路。", "初回オンライン時に収録済みの内容、公式マップ6枚、早見表（約24 MB）を保存します。「オフライン利用可能」と表示されたら、電波がなくても読めます。外部サイトには接続が必要です。")}</p><div class="status-line" id="offline-status"></div></div></section></div>${practicalInfo()}`;
 }
 function personalEvent(x) {
   return {
@@ -211,7 +237,7 @@ function allEvents() {
 }
 function eventRow(e) {
   const saved = e.personal || state.saved.includes(e.id);
-  return `<article class="event-row"><div class="event-time">${esc(e.start || "—")}<small>${e.end ? esc(e.end) : e.category === "broadcast" ? tx("起・間歇播出", "〜 随時中継") : tx("結束時間未定", "終了時刻未定")}</small></div><div><span class="tag">${e.personal ? tx("個人安排", "自分の予定") : e.category === "broadcast" ? tx("會場直播・非舞台場次", "会場中継・ステージ枠外") : e.category === "concert" ? tx("音樂節目", "音楽ステージ") : tx("官方節目", "公式プログラム")}</span><h3>${esc(loc(e.title))}</h3>${!e.personal ? jp(e.title) : ""}<div class="event-meta"><span>${esc(e.date)}</span>${e.location ? `<span>${esc(loc(e.location))}</span>` : ""}<span>JST</span></div>${e.description ? `<p>${esc(loc(e.description))}</p>` : ""}<div class="event-actions"><button class="button secondary small-button" data-calendar="${esc(e.id)}">${icon("download")}${tx("日曆提醒", "カレンダーへ")}</button>${e.locationId ? `<a class="button secondary small-button" href="#map" data-location="${esc(e.locationId)}">${tx("查看位置", "場所を見る")}</a>` : ""}${e.source ? `<a class="small" href="${esc(e.source)}" target="_blank" rel="noopener noreferrer">${tx("官方原文", "公式情報")} ↗</a>` : ""}${e.personal ? `<button class="button secondary small-button" data-delete-event="${esc(e.id)}">${tx("刪除", "削除")}</button>` : ""}</div></div>${e.personal ? "" : `<button class="save-button" aria-pressed="${saved}" aria-label="${saved ? tx("移除收藏", "保存を解除") : tx("收藏節目", "予定を保存")}: ${esc(loc(e.title))}" data-save="${esc(e.id)}">${icon("bookmark")}</button>`}</article>`;
+  return `<article class="event-row"><div class="event-time">${esc(e.start || "—")}<small>${e.end ? esc(e.end) : e.category === "broadcast" ? tx("起・間歇播出", "〜 随時中継") : tx("結束時間未定", "終了時刻未定")}</small></div><div><span class="tag">${e.personal ? tx("個人安排", "自分の予定") : e.category === "broadcast" ? tx("會場直播・非舞台場次", "会場中継・ステージ枠外") : e.category === "concert" ? tx("音樂節目", "音楽ステージ") : tx("官方節目", "公式プログラム")}</span><h3>${esc(loc(e.title))}</h3>${!e.personal ? jp(e.title) : ""}<div class="event-meta"><span>${esc(e.date)} · JST</span>${e.location ? `<span>${esc(loc(e.location))}</span>` : ""}</div>${e.description ? readingCopy(e.description) : ""}<div class="event-actions"><button class="button secondary small-button" data-calendar="${esc(e.id)}">${icon("download")}${tx("日曆提醒", "カレンダーへ")}</button>${e.locationId ? `<a class="button secondary small-button" href="#map" data-location="${esc(e.locationId)}">${tx("查看位置", "場所を見る")}</a>` : ""}${e.source ? `<a class="small" href="${esc(e.source)}" target="_blank" rel="noopener noreferrer">${tx("官方原文", "公式情報")} ↗</a>` : ""}${e.personal ? `<button class="button secondary small-button" data-delete-event="${esc(e.id)}">${tx("刪除", "削除")}</button>` : ""}</div></div>${e.personal ? "" : `<button class="save-button" aria-pressed="${saved}" aria-label="${saved ? tx("移除收藏", "保存を解除") : tx("收藏節目", "予定を保存")}: ${esc(loc(e.title))}" data-save="${esc(e.id)}">${icon("bookmark")}</button>`}</article>`;
 }
 function form() {
   return `<form class="event-form" id="event-form" ${showForm ? "" : "hidden"}><h2>${tx("新增個人安排", "自分の予定を追加")}</h2><p class="small">${tx("時間一律使用日本時間（JST，UTC+9）。這是你自己的安排，不是官方節目。", "時刻は日本時間（JST、UTC+9）で入力してください。公式プログラムとは別の個人の予定です。")}</p><div class="form-grid"><label class="wide">${tx("名稱", "タイトル")}<input required name="title" maxlength="100" placeholder="${tx("例如：和朋友在入口集合", "例：友達と入口で待ち合わせ")}"></label><label class="wide">${tx("日期", "日付")}<input required name="date" type="date"></label><label>${tx("開始時間", "開始時刻")}<input required name="start" type="time"></label><label>${tx("結束時間（選填）", "終了時刻（任意）")}<input name="end" type="time"></label><label class="wide">${tx("地點（選填）", "場所（任意）")}<input name="place" maxlength="150"></label></div><p class="form-error" id="form-error" role="alert"></p><div class="form-actions"><button class="button" type="submit">${tx("儲存安排", "予定を保存")}</button><button class="button secondary" type="button" data-cancel-form>${tx("取消", "キャンセル")}</button></div></form>`;
@@ -229,11 +255,12 @@ function schedule() {
     ) +
     notice() +
     form() +
+    viewSwitch("data-schedule-mode", state.scheduleMode, [["agenda", tx("行程列表", "リスト")], ["chart", tx("圖表時間軸", "タイムテーブル")]], tx("時間表顯示方式", "予定表の表示")) +
     `<div class="toolbar"><label class="search">${icon("search")}<input id="event-search" type="search" aria-label="${tx("搜尋節目", "予定を検索")}" placeholder="${tx("搜尋中文、日文名稱或地點", "タイトル・場所で検索")}" value="${esc(query)}"></label><select id="date-filter" aria-label="${tx("選擇日期", "日付を選択")}"><option value="">${tx("所有日期", "すべての日付")}</option>${dates.map((d) => `<option ${filterDate === d ? "selected" : ""}>${esc(d)}</option>`).join("")}</select><button class="button secondary" id="saved-filter" aria-pressed="${savedOnly}">${icon("bookmark")}${tx("只看我的安排", "保存した予定")}</button></div><div id="event-results">${eventResults()}</div>${stageRules()}<p class="small">${tx("提醒：下載 .ics 日曆檔後，需匯入手機日曆並確認提醒設定。本站不會在關閉後發出背景通知。", "通知：.ics ファイルを端末のカレンダーに取り込み、通知設定を確認してください。このサイトは閉じた状態で通知しません。")}</p>`
   );
 }
 function stageRules() {
-  return `<section class="stage-guidance"><h2>${tx("觀賞與直播須知", "観覧・配信について")}</h2>${(data.stageGuidance || []).map((g) => `<details class="practical-item"><summary>${esc(loc(g.title))}</summary><p>${esc(loc(g.description))}</p><a class="small" href="${esc(g.source)}" target="_blank" rel="noopener noreferrer">${tx("官方說明", "公式案内")} ↗</a></details>`).join("")}</section>`;
+  return `<section class="stage-guidance"><h2>${tx("觀賞與直播須知", "観覧・配信について")}</h2>${(data.stageGuidance || []).map((g) => `<details class="practical-item"><summary>${esc(loc(g.title))}</summary>${readingCopy(g.description)}<a class="small" href="${esc(g.source)}" target="_blank" rel="noopener noreferrer">${tx("官方說明", "公式案内")} ↗</a></details>`).join("")}</section>`;
 }
 function eventResults() {
   const list = allEvents().filter(
@@ -261,15 +288,23 @@ function eventResults() {
           ),
       sourceLink("stages"),
     );
-  return list
-    .map(
-      (e, i) =>
-        `${i === 0 || list[i - 1].date !== e.date ? `<h2 class="date-label">${esc(e.date)} · JST</h2>` : ""}${eventRow(e)}`,
-    )
-    .join("");
+  return renderTimetable({ events: list, dates: [...new Set(list.map(e => e.date))], mode: state.scheduleMode, language: state.lang, eventRow });
+}
+function updateChartDetail(focus = false) {
+  const detail = $("#chart-detail");
+  const selected = allEvents().find(e => e.id === selectedChartEvent);
+  const button = [...document.querySelectorAll("[data-chart-event]")].find(b => b.dataset.chartEvent === selectedChartEvent);
+  if (!detail || !selected || !button) return;
+  detail.innerHTML = eventRow(selected);
+  document.querySelectorAll("[data-chart-event]").forEach(b => b.setAttribute("aria-expanded", b === button));
+  if (focus) {
+    detail.focus({ preventScroll: true });
+    detail.scrollIntoView({ block: "center", behavior: "instant" });
+  }
 }
 function activityDetail(a, compact = false) {
-  return `<div class="activity-detail"><div class="activity-title"><span class="map-number">${esc(a.number ?? "—")}</span><div><h2>${esc(loc(a.title))}</h2>${jp(a.title)}</div></div><p>${esc(loc(a.description))}</p>${a.location ? `<p class="small">${esc(loc(a.location))}</p>` : ""}${a.notes ? `<p class="activity-note">${esc(loc(a.notes))}</p>` : ""}<div class="event-actions"><button class="button secondary" data-save="${esc(a.id)}" aria-pressed="${state.saved.includes(a.id)}">${icon("bookmark")}${state.saved.includes(a.id) ? tx("已收藏", "保存済み") : tx("加入清單", "リストに追加")}</button>${!compact ? `<a class="button secondary" href="#map" data-location="${esc(a.id)}">${icon("pin")}${tx("在地圖上找", "マップで探す")}</a>` : ""}<a class="small" href="${esc(a.source || source("floors").url)}" target="_blank" rel="noopener noreferrer">${tx("官方原文", "公式情報")} ↗</a></div></div>`;
+  const related = appGuide.required.filter(app => app.activityIds.includes(a.id));
+  return `<div class="activity-detail"><div class="activity-title"><span class="map-number">${esc(a.number ?? "—")}</span><div><h2>${esc(loc(a.title))}</h2>${jp(a.title)}</div></div>${a.location ? `<div class="activity-place">${icon("pin")}<span>${esc(loc(a.location))}</span></div>` : ""}<section class="activity-description"><h3>${tx("活動內容", "内容")}</h3>${readingCopy(a.description)}</section>${a.notes ? activityNotes(a.notes) : ""}${related.length ? `<div class="activity-apps"><strong>${tx("這個活動需要準備 App", "この体験に必要なアプリ")}</strong><p>${related.map(app => esc(loc(app.title))).join(" · ")}</p><button class="button secondary" data-open-apps>${tx("查看下載與設定", "ダウンロード・準備を見る")}${icon("arrow")}</button></div>` : ""}<div class="event-actions"><button class="button secondary" data-save="${esc(a.id)}" aria-pressed="${state.saved.includes(a.id)}">${icon("bookmark")}${state.saved.includes(a.id) ? tx("已收藏", "保存済み") : tx("加入清單", "リストに追加")}</button>${!compact ? `<a class="button secondary" href="#map" data-location="${esc(a.id)}">${icon("pin")}${tx("在地圖上找", "マップで探す")}</a>` : ""}<a class="small" href="${esc(a.source || source("floors").url)}" target="_blank" rel="noopener noreferrer">${tx("官方原文", "公式情報")} ↗</a></div></div>`;
 }
 function activityResults() {
   const q = activityQuery.trim().toLowerCase();
@@ -310,8 +345,9 @@ function activities() {
         "名称や参加条件を確認し、地図で場所を探せます。",
       ),
     ) +
-    `<section class="reservation-note"><h2>${tx("預約與參加方式", "予約・参加について")}</h2><div class="reservation-grid">${(data.reservationInfo || []).map((r) => `<details><summary>${esc(loc(r.title))}</summary><p>${esc(loc(r.body))}</p></details>`).join("")}</div>${sourceLink("reservation")}</section>` +
-    `<div class="toolbar"><label class="search">${icon("search")}<input id="activity-search" type="search" value="${esc(activityQuery)}" aria-label="${tx("搜尋活動", "アクティビティ検索")}" placeholder="${tx("搜尋活動名稱、編號…", "名称・番号で検索…")}"></label><select id="activity-map-filter" aria-label="${tx("篩選會場", "会場で絞り込み")}"><option value="">${tx("全部會場", "すべての会場")}</option>${[...new Set(data.activities.map((a) => a.mapId).filter(Boolean))].map((id) => `<option value="${esc(id)}" ${activityMap === id ? "selected" : ""}>${esc(loc(data.maps.find((m) => m.id === id)?.title) || id)}</option>`).join("")}</select></div><div id="activity-results">${activityResults()}</div>`
+    viewSwitch("data-activity-view", activityView, [["events", tx("活動一覽", "アクティビティ")], ["apps", tx("必備與選用 App", "必要・便利なアプリ")]], tx("活動資訊", "アクティビティ情報")) +
+    (activityView === "apps" ? renderApps(state.lang) : `<section class="reservation-note"><h2>${tx("預約與參加方式", "予約・参加について")}</h2><div class="reservation-grid">${(data.reservationInfo || []).map((r) => `<details><summary>${esc(loc(r.title))}</summary>${readingCopy(r.body)}</details>`).join("")}</div>${sourceLink("reservation")}</section>` +
+    `<div class="toolbar"><label class="search">${icon("search")}<input id="activity-search" type="search" value="${esc(activityQuery)}" aria-label="${tx("搜尋活動", "アクティビティ検索")}" placeholder="${tx("搜尋活動名稱、編號…", "名称・番号で検索…")}"></label><select id="activity-map-filter" aria-label="${tx("篩選會場", "会場で絞り込み")}"><option value="">${tx("全部會場", "すべての会場")}</option>${[...new Set(data.activities.map((a) => a.mapId).filter(Boolean))].map((id) => `<option value="${esc(id)}" ${activityMap === id ? "selected" : ""}>${esc(loc(data.maps.find((m) => m.id === id)?.title) || id)}</option>`).join("")}</select></div><div id="activity-results">${activityResults()}</div>`)
   );
 }
 function activeMap() {
@@ -364,13 +400,14 @@ function mapSelection() {
 }
 function practicalInfo() {
   return (data.practical || []).length
-    ? `<section class="practical-info"><div class="section-heading"><h2>${tx("交通、入場與補給", "アクセス・入場・飲食")}</h2></div>${data.practical.map((p) => `<details class="practical-item"><summary>${esc(loc(p.title))}</summary><p>${esc(loc(p.body || p.description))}</p>${p.source ? `<a class="small" href="${esc(p.source)}" target="_blank" rel="noopener noreferrer">${tx("官方說明", "公式案内")} ↗</a>` : ""}</details>`).join("")}</section>`
+    ? `<section class="practical-info"><div class="section-heading"><h2>${tx("交通、入場與補給", "アクセス・入場・飲食")}</h2></div>${data.practical.map((p) => `<details class="practical-item"><summary>${esc(loc(p.title))}</summary>${readingCopy(p.body || p.description)}${p.source ? `<a class="small" href="${esc(p.source)}" target="_blank" rel="noopener noreferrer">${tx("官方說明", "公式案内")} ↗</a>` : ""}</details>`).join("")}</section>`
     : "";
 }
 function maps() {
   const map = activeMap();
   if (!map) return header(tx("會場地圖", "会場マップ"), "") + notice();
   return (
+    mapTransportNav() +
     header(
       tx("會場地圖", "会場マップ"),
       tx(
@@ -397,7 +434,8 @@ function tldr() {
         "画像を端末に保存すれば、電波がなくても確認できます。中国語・日本語の各1枚。時刻は日本時間です。",
       ),
     ) +
-    `<div class="summary-actions"><a class="button" id="download-summary" href="./assets/summary/summary-${language}.png" download="fanfest-2026-${language}.png">${icon("download")}${tx("下載繁中懶人包", "日本語の早見表を保存")}</a><a class="button secondary" href="./assets/summary/summary-${language === "zh" ? "ja" : "zh"}.png" download="fanfest-2026-${language === "zh" ? "ja" : "zh"}.png">${tx("另存日文版", "中国語版も保存")}</a></div><p class="small">${tx("若手機改為開啟圖片，可長按圖片儲存。整理日期：", "画像が開いた場合は、長押しして保存してください。確認日：")}${esc(data.verifiedAt)} · ${tx("節目可能調整，以官方公告為準。", "内容は変更になる場合があります。公式発表をご確認ください。")}</p><a class="summary-preview" href="./assets/summary/summary-${language}.png" target="_blank" aria-label="${tx("開啟原尺寸時間表圖片", "タイムライン画像を原寸で開く")}"><img src="./assets/summary/summary-${language}.png" width="${sheet.width}" height="${sheet.height}" alt="${tx("10月31日及11月1日 FanFest 舞台節目與預約重點總覽；相同節目資料可於下方文字版閱讀。", "10月31日・11月1日のファンフェスのステージと予約の要点。予定の内容は下のテキストでも読めます。")}" loading="eager"></a><details class="summary-text"><summary>${tx("閱讀文字版時間表", "タイムラインをテキストで読む")}</summary>${data.dates
+    `<div class="guide-toolbar">${viewSwitch("data-tldr-view", tldrView, [["timeline", tx("時間表圖片", "早見表画像")], ["apps", tx("必備與選用 App", "必要・便利なアプリ")]], tx("懶人包內容", "早見表の内容"))}<a class="text-link" href="#transport">${tx("交通・成田機場", "アクセス・成田空港")} ${icon("arrow")}</a></div>` +
+    (tldrView === "apps" ? renderApps(state.lang) : `<div class="summary-actions"><a class="button" id="download-summary" href="./assets/summary/summary-${language}.png" download="fanfest-2026-${language}.png">${icon("download")}${tx("下載繁中懶人包", "日本語の早見表を保存")}</a><a class="button secondary" href="./assets/summary/summary-${language === "zh" ? "ja" : "zh"}.png" download="fanfest-2026-${language === "zh" ? "ja" : "zh"}.png">${tx("另存日文版", "中国語版も保存")}</a></div><p class="small">${tx("若手機改為開啟圖片，可長按圖片儲存。整理日期：", "画像が開いた場合は、長押しして保存してください。確認日：")}${esc(data.verifiedAt)} · ${tx("節目可能調整，以官方公告為準。", "内容は変更になる場合があります。公式発表をご確認ください。")}</p><a class="summary-preview" href="./assets/summary/summary-${language}.png" target="_blank" aria-label="${tx("開啟原尺寸時間表圖片", "タイムライン画像を原寸で開く")}"><img src="./assets/summary/summary-${language}.png" width="${sheet.width}" height="${sheet.height}" alt="${tx("10月31日及11月1日 FanFest 舞台節目與預約重點總覽；相同節目資料可於下方文字版閱讀。", "10月31日・11月1日のファンフェスのステージと予約の要点。予定の内容は下のテキストでも読めます。")}" loading="eager"></a><details class="summary-text"><summary>${tx("閱讀文字版時間表", "タイムラインをテキストで読む")}</summary>${data.dates
       .map(
         (date) =>
           `<h2>${esc(date)} · JST</h2><ul>${data.stages
@@ -411,7 +449,7 @@ function tldr() {
       )
       .join(
         "",
-      )}<h2>${tx("預約重點", "予約の要点")}</h2>${(data.reservationInfo || []).map((r) => `<h3>${esc(loc(r.title))}</h3><p>${esc(loc(r.body))}</p>`).join("")}</details>`
+      )}<h2>${tx("預約重點", "予約の要点")}</h2>${(data.reservationInfo || []).map((r) => `<h3>${esc(loc(r.title))}</h3>${readingCopy(r.body)}`).join("")}</details>`)
   );
 }
 
@@ -437,7 +475,7 @@ function myList() {
   );
 }
 function render() {
-  if (!nav.some((x) => x[0] === page)) page = "home";
+  if (!nav.some((x) => x[0] === page) && page !== "transport") page = "home";
   document.documentElement.lang = state.lang === "ja" ? "ja" : "zh-Hant";
   document.title = tx(
     "FanFest Note · 隨行筆記",
@@ -451,7 +489,7 @@ function render() {
   $("#navigation").innerHTML = nav
     .map(
       ([id, ic, zh, ja]) =>
-        `<a href="#${id}" ${page === id ? 'aria-current="page"' : ""}>${icon(ic)}<span>${tx(zh, ja)}</span>${id === "list" && state.saved.length ? `<span class="count">${state.saved.length}</span>` : ""}</a>`,
+        `<a href="#${id}" ${page === id || (page === "transport" && id === "map") ? 'aria-current="page"' : ""}>${icon(ic)}<span>${tx(zh, ja)}</span>${id === "list" && state.saved.length ? `<span class="count">${state.saved.length}</span>` : ""}</a>`,
     )
     .join("");
   $("#main").innerHTML = {
@@ -460,11 +498,13 @@ function render() {
     activities,
     tldr,
     map: maps,
+    transport: () => mapTransportNav() + renderTransport(state.lang),
     list: myList,
   }[page]();
   $("#footer").innerHTML =
     `<div><p>FANFEST NOTE · ${tx("朋友間的非官方隨行指南", "友達と使う非公式ガイド")}</p><p>${tx("FINAL FANTASY XIV 與官方圖文之權利歸 SQUARE ENIX 所有。", "FINAL FANTASY XIV および公式コンテンツの権利は SQUARE ENIX に帰属します。")}</p></div><div><p>${tx("所有活動時間：日本時間 JST（UTC+9）", "イベント時刻：日本時間 JST（UTC+9）")}</p><p>${data.verifiedAt ? tx("官方資料核實日期：", "公式情報の確認日：") + esc(data.verifiedAt) : tx("官方資料：尚待核實", "公式情報：未確認")}</p><div id="footer-offline" class="status-line"></div></div>`;
   updateStatus();
+  updateChartDetail();
   if (!storageOK)
     toast(
       tx(
@@ -578,6 +618,35 @@ function calendar(e) {
 document.addEventListener("click", (e) => {
   const b = e.target.closest("button,a");
   if (!b) return;
+  if (b.dataset.scheduleMode) {
+    state.scheduleMode = b.dataset.scheduleMode === "chart" ? "chart" : "agenda";
+    save();
+    render();
+    document.querySelector(`[data-schedule-mode="${state.scheduleMode}"]`)?.focus({ preventScroll: true });
+  }
+  if (b.dataset.chartEvent) {
+    selectedChartEvent = b.dataset.chartEvent;
+    updateChartDetail(true);
+  }
+  if (b.dataset.activityView) {
+    activityView = b.dataset.activityView;
+    render();
+    document.querySelector(`[data-activity-view="${activityView}"]`)?.focus({ preventScroll: true });
+  }
+  if (b.dataset.tldrView) {
+    tldrView = b.dataset.tldrView;
+    render();
+    document.querySelector(`[data-tldr-view="${tldrView}"]`)?.focus({ preventScroll: true });
+  }
+  if (b.hasAttribute("data-open-apps")) {
+    activityView = "apps";
+    if (page !== "activities") location.hash = "activities";
+    else { render(); $("#main").focus(); window.scrollTo(0, 0); }
+  }
+  if (b.dataset.jump) {
+    const target = document.getElementById(b.dataset.jump);
+    if (target) { target.focus({ preventScroll: true }); target.scrollIntoView({ block: "start", behavior: "instant" }); }
+  }
   if (b.classList.contains("skip-link")) {
     e.preventDefault();
     $("#main").focus();
@@ -743,6 +812,7 @@ document.addEventListener("input", (e) => {
   if (e.target.id === "event-search") {
     query = e.target.value;
     $("#event-results").innerHTML = eventResults();
+    updateChartDetail();
   }
 });
 document.addEventListener("change", async (e) => {
@@ -763,6 +833,7 @@ document.addEventListener("change", async (e) => {
   if (e.target.id === "date-filter") {
     filterDate = e.target.value;
     $("#event-results").innerHTML = eventResults();
+    updateChartDetail();
   }
   if (e.target.id === "map-select") {
     selectedMapId = e.target.value;
