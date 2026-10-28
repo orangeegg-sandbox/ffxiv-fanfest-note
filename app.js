@@ -3,6 +3,8 @@ import { appGuide } from "./data/apps.js";
 import { renderTimetable } from "./ui/schedule.js";
 import { renderApps, renderTransport } from "./ui/preparation.js";
 import { renderGoods, renderGoodsResults } from "./ui/goods.js";
+import { areaGuide } from "./data/area-map.js";
+import { renderAreaOverview, renderAreaSelection, renderAreaLegend } from "./ui/area-map.js";
 import { renderConcertGuide } from "./ui/concerts.js";
 import { renderMapTabs, getMapTabKeyboardTarget } from "./ui/map-tabs.js";
 import { goodsGuide } from "./data/goods.js";
@@ -99,6 +101,7 @@ let page = location.hash.slice(1) || "home",
   cacheReady = false,
   mapZoom = 100,
   selectedMapId = "messe-entire",
+  selectedAreaPlace = "kaihin-station",
   selectedActivityId = "",
   selectedPointIndex = null,
   activityQuery = "",
@@ -229,7 +232,7 @@ function sourceRows() {
   return `<div class="source-list">${data.sources.map((s, i) => `<a class="source-row" href="${s.url}" target="_blank" rel="noopener noreferrer"><span class="source-symbol">${icon(["calendar", "list", "spark", "map"][i])}</span><span><strong>${esc(loc(s.title))}</strong><small>${state.lang === "zh" ? esc(s.title.ja) + " · " : ""}${tx("官方日文頁面 · 需連線", "公式ページ · オンライン")}</small></span><span class="arrow">${icon("external")}</span></a>`).join("")}</div>`;
 }
 function home() {
-  return `<section class="hero"><div><h1>${tx("你的 FanFest<br><em>隨行筆記。</em>", "ファンフェスを、<br><em>手のひらに。</em>")}</h1><p>${tx("舞台節目、會場活動與自己的待辦。<br>整理好再出發，現場隨手查。", "ステージ、会場のアクティビティ、自分の予定。<br>出かける前にまとめて、会場でさっと確認。")}</p><div class="event-dates">10.31 <small>SAT</small> <span>—</span> 11.01 <small>SUN</small></div><div class="edition"><b>JAPAN 2026</b><span>FINAL FANTASY XIV FAN FESTIVAL</span></div></div><aside class="field-note"><h2>${tx("今天，從這裡開始", "まずは、ここから")}</h2><a href="#tldr"><span>${tx("兩天重點，一張帶走", "2日間の早見表を保存")}<small>${tx("繁中・日文時間表圖片", "中国語・日本語のタイムライン")}</small></span>${icon("download")}</a><a href="#schedule"><span>${tx("看看節目時間", "ステージの予定を確認")}<small>ステージ・タイムテーブル</small></span>${icon("arrow")}</a><a href="#map"><span>${tx("找到下一個目的地", "次の目的地を探す")}<small>会場マップ</small></span>${icon("arrow")}</a><a href="#transport"><span>${tx("去程、散場與羽田機場", "行き帰り・羽田空港へ")}<small>${tx("車站、巴士與機場路線", "駅・バス・空港へのルート")}</small></span>${icon("arrow")}</a><a href="#list"><span>${tx("記下你的必做清單", "やりたいことをメモ")}<small>マイリスト</small></span>${icon("arrow")}</a></aside></section>${notice()}<div class="venue-strip">${icon("pin")}<span>${tx("幕張展覽館 1–7 展廳・AEON MALL 幕張新都心・豐砂公園", "幕張メッセ 1〜7ホール・イオンモール幕張新都心・豊砂公園")}<small>${tx("10/31、11/1 皆為 09:00 開場／21:00 結束（預定）", "両日 09:00 開場／21:00 終了予定")}</small></span></div><div class="home-grid"><section><div class="section-heading"><h2>${tx("官方資訊，一次找到", "公式情報へのリンク")}</h2><span>${tx("日文原文", "公式サイト")}</span></div>${sourceRows()}</section><section><div class="section-heading"><h2>${tx("出發前的小準備", "出発前のチェック")}</h2><a href="#list">${tx("全部清單", "すべて見る")} →</a></div>${checkRows(defaults.slice(0, 3))}<p class="small">${tx("這是個人準備建議；正式入場規定請以官方公告為準。", "個人向けの準備メモです。入場条件は公式案内をご確認ください。")}</p><div class="info-block"><h3>${tx("把筆記帶著走", "オフラインでも手元に")}</h3><p>${tx("首次連線開啟後，網站會儲存已收錄的內容、六張會場地圖、入場／舞台示意圖、懶人包與商品圖片（約 27 MB）。看到「已可離線使用」後，即可在沒訊號時查閱。外部網站仍需網路。", "初回オンライン時に収録済みの内容、会場マップ6枚、入場・ステージ案内図、早見表、商品画像（約27 MB）を保存します。「オフライン利用可能」と表示されたら、電波がなくても読めます。外部サイトには接続が必要です。")}</p><div class="status-line" id="offline-status"></div></div></section></div>${practicalInfo()}`;
+  return `<section class="hero"><div><h1>${tx("你的 FanFest<br><em>隨行筆記。</em>", "ファンフェスを、<br><em>手のひらに。</em>")}</h1><p>${tx("舞台節目、會場活動與自己的待辦。<br>整理好再出發，現場隨手查。", "ステージ、会場のアクティビティ、自分の予定。<br>出かける前にまとめて、会場でさっと確認。")}</p><div class="event-dates">10.31 <small>SAT</small> <span>—</span> 11.01 <small>SUN</small></div><div class="edition"><b>JAPAN 2026</b><span>FINAL FANTASY XIV FAN FESTIVAL</span></div></div><aside class="field-note"><h2>${tx("今天，從這裡開始", "まずは、ここから")}</h2><a href="#tldr"><span>${tx("兩天重點，一張帶走", "2日間の早見表を保存")}<small>${tx("繁中・日文時間表圖片", "中国語・日本語のタイムライン")}</small></span>${icon("download")}</a><a href="#schedule"><span>${tx("看看節目時間", "ステージの予定を確認")}<small>ステージ・タイムテーブル</small></span>${icon("arrow")}</a><a href="#map"><span>${tx("找到下一個目的地", "次の目的地を探す")}<small>会場マップ</small></span>${icon("arrow")}</a><a href="#transport"><span>${tx("去程、散場與羽田機場", "行き帰り・羽田空港へ")}<small>${tx("車站、巴士與機場路線", "駅・バス・空港へのルート")}</small></span>${icon("arrow")}</a><a href="#list"><span>${tx("記下你的必做清單", "やりたいことをメモ")}<small>マイリスト</small></span>${icon("arrow")}</a></aside></section>${notice()}<div class="venue-strip">${icon("pin")}<span>${tx("幕張展覽館 1–7 展廳・AEON MALL 幕張新都心・豐砂公園", "幕張メッセ 1〜7ホール・イオンモール幕張新都心・豊砂公園")}<small>${tx("10/31、11/1 皆為 09:00 開場／21:00 結束（預定）", "両日 09:00 開場／21:00 終了予定")}</small></span></div><div class="home-grid"><section><div class="section-heading"><h2>${tx("官方資訊，一次找到", "公式情報へのリンク")}</h2><span>${tx("日文原文", "公式サイト")}</span></div>${sourceRows()}</section><section><div class="section-heading"><h2>${tx("出發前的小準備", "出発前のチェック")}</h2><a href="#list">${tx("全部清單", "すべて見る")} →</a></div>${checkRows(defaults.slice(0, 3))}<p class="small">${tx("這是個人準備建議；正式入場規定請以官方公告為準。", "個人向けの準備メモです。入場条件は公式案内をご確認ください。")}</p><div class="info-block"><h3>${tx("把筆記帶著走", "オフラインでも手元に")}</h3><p>${tx("首次連線開啟後，網站會儲存已收錄的內容、周邊交通圖、六張會場地圖、入場／舞台示意圖、懶人包與商品圖片（約 27 MB）。看到「已可離線使用」後，即可在沒訊號時查閱。外部網站仍需網路。", "初回オンライン時に収録済みの内容、周辺アクセス図、会場マップ6枚、入場・ステージ案内図、早見表、商品画像（約27 MB）を保存します。「オフライン利用可能」と表示されたら、電波がなくても読めます。外部サイトには接続が必要です。")}</p><div class="status-line" id="offline-status"></div></div></section></div>${practicalInfo()}`;
 }
 function personalEvent(x) {
   return {
@@ -413,6 +416,12 @@ function practicalInfo() {
     : "";
 }
 function maps() {
+  if (selectedMapId === "area-overview") {
+    return mapTransportNav() +
+      header(tx("會場地圖", "会場マップ"), tx("從車站找到下一個會場，查閱步行動線與接駁乘車點。", "駅から次の会場へ。徒歩の動線とシャトル乗り場を確認。")) +
+      renderMapTabs(data.maps, selectedMapId, state.lang) +
+      renderAreaOverview({ language: state.lang, selectedPlaceId: selectedAreaPlace, zoom: mapZoom });
+  }
   const map = activeMap();
   if (!map) return header(tx("會場地圖", "会場マップ"), "") + notice();
   return (
@@ -635,7 +644,7 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("click", (e) => {
   const b = e.target.closest("button,a");
   if (!b) return;
-  if (b.dataset.mapControl && data.maps.some(map => map.id === b.dataset.mapId)) {
+  if (b.dataset.mapControl && (b.dataset.mapId === "area-overview" || data.maps.some(map => map.id === b.dataset.mapId))) {
     selectedMapId = b.dataset.mapId;
     selectedActivityId = "";
     selectedPointIndex = null;
@@ -643,6 +652,39 @@ document.addEventListener("click", (e) => {
     const control = b.dataset.mapControl;
     render();
     document.querySelector(`[data-map-control="${control}"]`)?.focus({ preventScroll: true });
+  }
+  if (b.dataset.areaPlace && selectedMapId === "area-overview" && areaGuide.places.some(place => place.id === b.dataset.areaPlace)) {
+    selectedAreaPlace = b.dataset.areaPlace;
+    $("#area-selection").innerHTML = renderAreaSelection(selectedAreaPlace, state.lang);
+    $("#area-legend").innerHTML = renderAreaLegend(state.lang, selectedAreaPlace);
+    document.querySelectorAll("[data-area-place]").forEach(control => {
+      const selected = control.dataset.areaPlace === selectedAreaPlace;
+      control.setAttribute("aria-pressed", selected);
+      control.classList.toggle("selected", selected);
+    });
+    requestAnimationFrame(() => {
+      panAreaPoint();
+      $("#area-selection").focus({ preventScroll: true });
+      $("#area-selection").scrollIntoView({ block: "start", behavior: "instant" });
+    });
+  }
+  if (b.hasAttribute("data-area-focus") && selectedMapId === "area-overview") {
+    mapZoom = Math.max(300, mapZoom);
+    updateMapZoom();
+    requestAnimationFrame(() => {
+      panAreaPoint();
+      $(".map-viewport").focus({ preventScroll: true });
+      $(".map-viewport").scrollIntoView({ block: "center", behavior: "instant" });
+    });
+  }
+  if (b.dataset.areaVenue && data.maps.some(map => map.id === b.dataset.areaVenue)) {
+    selectedMapId = b.dataset.areaVenue;
+    selectedActivityId = "";
+    selectedPointIndex = null;
+    mapZoom = 100;
+    render();
+    $(".map-viewport").focus({ preventScroll: true });
+    $(".map-viewport").scrollIntoView({ block: "center", behavior: "instant" });
   }
   if (b.dataset.goodsView) {
     goodsView = b.dataset.goodsView;
@@ -777,13 +819,24 @@ document.addEventListener("click", (e) => {
     mapZoom = b.hasAttribute("data-reset-map")
       ? 100
       : Math.min(800, Math.max(100, mapZoom + Number(b.dataset.zoom)));
-    $("#map-canvas").style.width = mapZoom + "%";
-    document.querySelector('[data-zoom="-25"]').disabled = mapZoom <= 100;
-    document.querySelector('[data-zoom="25"]').disabled = mapZoom >= 800;
-    $("#zoom-label").textContent = mapZoom + "%";
-    if (selectedActivityId) requestAnimationFrame(focusMapSelection);
+    updateMapZoom();
+    if (selectedMapId === "area-overview") requestAnimationFrame(panAreaPoint);
+    else if (selectedActivityId) requestAnimationFrame(focusMapSelection);
   }
 });
+function updateMapZoom() {
+  $("#map-canvas").style.width = mapZoom + "%";
+  document.querySelector('[data-zoom="-25"]').disabled = mapZoom <= 100;
+  document.querySelector('[data-zoom="25"]').disabled = mapZoom >= 800;
+  $("#zoom-label").textContent = mapZoom + "%";
+}
+function panAreaPoint() {
+  if (selectedMapId !== "area-overview") return;
+  const point = areaGuide.places.find(place => place.id === selectedAreaPlace);
+  const viewport = $(".map-viewport"), canvas = $("#map-canvas");
+  if (!point || !viewport || !canvas) return;
+  viewport.scrollTo({ left: canvas.offsetWidth * point.x / 100 - viewport.clientWidth / 2, top: canvas.offsetHeight * point.y / 100 - viewport.clientHeight / 2, behavior: "instant" });
+}
 function focusMapSelection() {
   const viewport = $(".map-viewport"),
     canvas = $("#map-canvas");

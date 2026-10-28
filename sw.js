@@ -1,5 +1,5 @@
 /* Bump VERSION whenever a bundled asset changes before deployment. */
-const VERSION = "2026-10-28-concerts-v7";
+const VERSION = "2026-10-28-area-v8";
 const APP_FILES = [
   "./index.html",
   "./styles.css",
@@ -8,15 +8,18 @@ const APP_FILES = [
   "./goods.css",
   "./map-tabs.css",
   "./concerts.css",
+  "./area-map.css",
   "./app.js",
   "./ui/schedule.js",
   "./ui/preparation.js",
   "./ui/goods.js",
   "./ui/map-tabs.js",
   "./ui/concerts.js",
+  "./ui/area-map.js",
   "./data/events.js",
   "./data/stages.js",
   "./data/concerts.js",
+  "./data/area-map.js",
   "./data/activities.js",
   "./data/summary.js",
   "./data/apps.js",
@@ -27,6 +30,7 @@ const APP_FILES = [
   "./icons/icon.svg",
   "./fonts/guide-serif-zh.woff",
   "./fonts/guide-serif-ja.woff",
+  "./assets/area/overview.webp",
   "./assets/concerts/entrance.webp",
   "./assets/concerts/stage-area.webp",
   "./assets/maps/aeon.c1bab500.jpg",
