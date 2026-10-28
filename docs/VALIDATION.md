@@ -49,7 +49,9 @@ For the Haneda/map refinement, the documenter compared `DESIGN.md` and `.impecca
 
 ## Release
 
-The Haneda/map package uses cache `2026-10-28-haneda-v6`, with **67 precache assets**. Package verification found **104 static site files**, and ZIP integrity passed. `map-tabs.css` and `ui/map-tabs.js` are included in both the package and complete offline cache.
+The Haneda/map package uses cache `2026-10-28-haneda-v6`, with **67 precache assets**. Package verification found **104 static site files**, and ZIP integrity passed. `map-tabs.css` and `ui/map-tabs.js` are included in both the package and complete offline cache. Implementation commit `c64adda` and deployment commit `be93da8` were pushed; GitHub Pages reported that exact deployment commit built successfully. The public service worker serves `2026-10-28-haneda-v6`.
+
+A fresh 390px browser on the public site verified all nine Haneda bus rows, the provisional midnight alert, four slanted map tabs with keyboard switching, and Japanese labels. After switching offline and reloading, all six official map images decoded and the nine-row bus table, rail route and midnight example remained available. No JavaScript errors occurred. No cloud environment publication was performed.
 
 The previous merchandise release used `2026-10-28-goods-v5`, with **65 precache assets**. Package verification found **102 static site files**, including `.nojekyll` and 33 image-provenance `.webp.json` sidecars; ZIP integrity passed. The metadata sidecars ship with the images but are not runtime precache assets. `npm run package` produces `dist/site` and `dist/fanfest-note.zip`; the ZIP also contains `START-HERE.txt`. Implementation commit `33b5222` and deployment commit `7a17005` were pushed. GitHub Pages reported that exact deployment commit built successfully.
 
