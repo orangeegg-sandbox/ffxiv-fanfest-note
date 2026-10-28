@@ -1,5 +1,5 @@
 /* Bump VERSION whenever a bundled asset changes before deployment. */
-const VERSION = "2026-10-28-haneda-v6";
+const VERSION = "2026-10-28-concerts-v7";
 const APP_FILES = [
   "./index.html",
   "./styles.css",
@@ -7,13 +7,16 @@ const APP_FILES = [
   "./guide.css",
   "./goods.css",
   "./map-tabs.css",
+  "./concerts.css",
   "./app.js",
   "./ui/schedule.js",
   "./ui/preparation.js",
   "./ui/goods.js",
   "./ui/map-tabs.js",
+  "./ui/concerts.js",
   "./data/events.js",
   "./data/stages.js",
+  "./data/concerts.js",
   "./data/activities.js",
   "./data/summary.js",
   "./data/apps.js",
@@ -24,6 +27,8 @@ const APP_FILES = [
   "./icons/icon.svg",
   "./fonts/guide-serif-zh.woff",
   "./fonts/guide-serif-ja.woff",
+  "./assets/concerts/entrance.webp",
+  "./assets/concerts/stage-area.webp",
   "./assets/maps/aeon.c1bab500.jpg",
   "./assets/maps/messe_entire.f6fe34fd.jpg",
   "./assets/maps/messe_hall1-3.0be2c736.jpg",
