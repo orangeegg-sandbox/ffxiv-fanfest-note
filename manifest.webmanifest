@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "FFXIV FanFest Note · 光之戰士手帖",
+  "short_name": "FanFest Note",
+  "description": "繁體中文・日本語のファンフェスガイド。活動資訊、時間表與個人清單。",
+  "lang": "zh-Hant",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f2e9",
+  "theme_color": "#163e3b",
+  "icons": [
+    { "src": "./icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#173f3b" />
+    <meta
+      name="description"
+      content="FFXIV FanFest 2026 日本場隨行筆記：繁體中文・日本語、活動資訊、個人行程與離線清單。"
+    />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>FanFest Note · 隨行筆記</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳至內容 / 本文へ</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="wordmark" href="#home" aria-label="FanFest Note"
+          ><svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M7 5h17v23H7zM11 2v7M20 2v7M11 14h9M11 19h6" /></svg
+          ><span>FANFEST<span class="wordmark-light"> NOTE</span></span></a
+        >
+        <div class="header-actions">
+          <span id="connection" class="connection"></span>
+          <div class="language" aria-label="Language">
+            <button data-lang="zh" lang="zh-Hant">繁中</button
+            ><button data-lang="ja" lang="ja">日本語</button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="page-shell">
+      <nav
+        id="navigation"
+        class="navigation"
+        aria-label="Main navigation"
+      ></nav>
+      <main id="main" tabindex="-1"></main>
+      <footer id="footer"></footer>
+    </div>
+    <div id="toast" role="status" class="toast" hidden></div>
+    <script type="module" src="./app.js"></script>
+    <noscript
+      ><p>
+        請啟用 JavaScript 以使用雙語行程與清單。日本語：予定表とリストを使うには
+        JavaScript を有効にしてください。
+      </p>
+      <p>
+        <a href="https://fanfest.finalfantasyxiv.com/2026/jp/"
+          >FFXIV Fan Festival 官方網站 / 公式サイト</a
+        >
+      </p></noscript
+    >
+  </body>
+</html>
