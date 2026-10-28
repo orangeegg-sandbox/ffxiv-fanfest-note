@@ -27,4 +27,8 @@ The detector was run once. Its navigation-border warning is a false positive for
 
 `npm run package` produces `dist/site` and `dist/fanfest-note.zip`. ZIP integrity and presence of all six maps, both PNGs and the shared photo-session metadata were checked; the archive is approximately 23.22 MiB.
 
-No public website deployment or environment publication was performed in this task. Content is a snapshot verified on October 28, 2026; later official changes require reverification and regeneration. Calendar alarms depend on the user's calendar application; the website does not send background push notifications.
+The source was committed and pushed to `main`; the packaged site, including `.nojekyll`, was pushed to `deploy`. Remote branch hashes were verified. The deployment tree contains 26 static files and excludes development tools, tests and repository configuration.
+
+GitHub rejected the Pages setup API request with HTTP 403 (`Resource not accessible by integration`). Pages remains disabled and its expected public URL returns HTTP 404. A repository administrator must select **Deploy from a branch → deploy → / (root)** in Settings → Pages. No cloud environment publication was performed.
+
+Content is a snapshot verified on October 28, 2026; later official changes require reverification and regeneration. Calendar alarms depend on the user's calendar application; the website does not send background push notifications.

@@ -57,7 +57,9 @@ npm test
 npm run package
 ```
 
-需 Python 3。輸出 `dist/site/` 與 `dist/fanfest-note.zip`，只包含網站需要的 HTML、CSS、JS、manifest、資料、圖示、字型及圖片素材。原始碼保存在 `main`，`deploy` 分支只包含 `dist/site/` 的靜態檔案與 `.nojekyll`。GitHub Pages 使用 `deploy` 分支的根目錄作為發布來源。更新網站時，先在 `main` 修改並驗證，再重新封裝及更新 `deploy`。
+需 Python 3。輸出 `dist/site/` 與 `dist/fanfest-note.zip`，只包含網站需要的 HTML、CSS、JS、manifest、資料、圖示、字型及圖片素材。原始碼保存在 `main`，`deploy` 分支只包含 `dist/site/` 的靜態檔案與 `.nojekyll`。GitHub Pages 應選擇 `deploy` 分支的根目錄作為發布來源。更新網站時，先在 `main` 修改並驗證，再重新封裝及更新 `deploy`。
+
+兩個分支已推送到 GitHub。目前整合憑證無權啟用 Pages，需在 [Settings → Pages](https://github.com/orangeegg-sandbox/ffxiv-fanfest-note/settings/pages) 將 Source 設為 **Deploy from a branch**、Branch 設為 **deploy**、資料夾選 **/ (root)**，然後儲存。首次建置完成後，網址為 https://orangeegg-sandbox.github.io/ffxiv-fanfest-note/ 。
 
 全站使用相對路徑，支援子目錄；hash 分頁不需要伺服器路由規則。不要部署整個儲存庫、`.agents` 或測試資料。Service Worker 只在 HTTPS／localhost 可用；首次連線且顯示離線就緒後，才可離線查閱。瀏覽器仍可能清理快取，重要個人筆記請匯出備份。
 
