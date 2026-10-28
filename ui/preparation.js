@@ -16,6 +16,38 @@ export function renderApps(language) {
 export function renderTransport(language) {
   const loc = local(language);
   const tx = (zh, ja) => language === "ja" ? ja : zh;
-  const busTable = `<div class="bus-table-wrap"><table class="bus-table"><caption>${tx("會場發車班次 → 成田第 2 航廈", "会場発の便 → 成田第2ターミナル")}</caption><thead><tr><th scope="col">${tx("幕張 MESSE 中央", "幕張メッセ中央")}</th><th scope="col">${tx("海浜幕張站", "海浜幕張駅")}</th><th scope="col">${tx("成田 T2 抵達", "成田 T2 到着")}</th></tr></thead><tbody>${transportGuide.airportBus.selectedMesseDepartures.map(row => `<tr><td>${esc(row.messe)}</td><td>${esc(row.station)}</td><td><strong>${esc(row.terminal2)}</strong></td></tr>`).join("")}</tbody></table></div><p class="small">${tx("現行表", "現行表")}：${esc(transportGuide.airportBus.timetableEffectiveAt)} · JST · ${tx("表定時間，未含交通延誤", "予定時刻・道路状況により遅延あり")}</p>`;
-  return `<div class="page-title"><div><h1>${esc(loc(transportGuide.title))}</h1><p>${esc(loc(transportGuide.intro))}</p></div></div><aside class="transport-alert"><h2>${tx("DAY 2・成田第 2 航廈", "DAY 2・成田第2ターミナル")}</h2><p>${esc(loc(transportGuide.airportWarning))}</p><button class="button secondary" data-jump="transport-narita">${tx("查看 T2 路線與時刻", "T2への経路・時刻を見る")}</button></aside><div class="guide-jump" role="group" aria-label="${tx("交通指南章節", "アクセス案内の項目")}">${transportGuide.sections.map(section => `<button data-jump="transport-${esc(section.id)}">${esc(loc(section.title))}</button>`).join("")}</div><div class="transport-guide">${transportGuide.sections.map(section => `<section class="guide-section" id="transport-${esc(section.id)}" tabindex="-1"><h2>${esc(loc(section.title))}</h2>${section.summary ? `<p class="guide-intro">${esc(loc(section.summary))}</p>` : ""}${section.cards.map(card => `<article class="transport-route" id="route-${esc(card.id)}"><div class="route-heading"><h3>${esc(loc(card.title))}</h3>${card.tag ? `<span class="tag">${esc(loc(card.tag))}</span>` : ""}</div>${card.id === "narita-bus" ? busTable : ""}${list(card.steps, loc, true)}${card.notes?.length ? `<div class="guide-note">${list(card.notes, loc)}</div>` : ""}${externalLinks(card.links, loc)}</article>`).join("")}</section>`).join("")}<section class="airport-checklist guide-section"><h2>${tx("DAY 2 去機場前，先確認", "DAY 2・空港へ向かう前に")}</h2>${list(transportGuide.airportChecklist, loc)}${externalLinks(transportGuide.sourceLinks, loc)}<a class="button secondary" href="#schedule">${tx("回到時間表，安排離場時間", "予定表で出発時間を決める")}</a></section><p class="guide-verified">${tx("交通資料核實日期", "交通情報の確認日")}：${esc(transportGuide.verifiedAt)} · ${tx("時間皆為 JST。此頁可離線閱讀，班次與運行狀況請出發前連線確認。", "時刻はすべて日本時間。本文はオフラインで読めます。便・運行状況は出発前にオンラインで確認してください。")}</p></div>`;
+  const airport = transportGuide.airportBus;
+  const busTable = `<p class="small bus-table-hint" id="airport-table-help">${tx("晚間班次摘錄・左右滑動查看各航廈。— 表示不停靠會場。", "夕方以降の便を抜粋。左右にスクロールして各ターミナルを確認。— は会場に停車しません。")}</p>
+    <div class="bus-table-wrap" tabindex="0" role="region" aria-label="${tx("羽田機場巴士時刻表", "羽田空港行きバス時刻表")}" aria-describedby="airport-table-help">
+      <table class="bus-table">
+        <caption>${tx("海浜幕張／會場 → 羽田・晚間班次", "海浜幕張・会場 → 羽田の夕方便")} (JST)</caption>
+        <thead><tr>
+          <th scope="col">${tx("海浜幕張站", "海浜幕張駅")}</th>
+          <th scope="col">${tx("幕張 MESSE 中央", "幕張メッセ中央")}</th>
+          <th scope="col">${tx("T2 抵達", "T2 到着")}</th>
+          <th scope="col">${tx("T1 抵達", "T1 到着")}</th>
+          <th scope="col">${tx("T3 抵達", "T3 到着")}</th>
+        </tr></thead>
+        <tbody>${airport.selectedDepartures.map(row => `<tr><th scope="row">${esc(row.station)}</th><td>${row.messe ? esc(row.messe) : `<span aria-label="${tx("不停靠", "停車なし")}">—</span>`}</td><td>${esc(row.terminal2)}</td><td>${esc(row.terminal1)}</td><td>${esc(row.terminal3)}</td></tr>`).join("")}</tbody>
+      </table>
+    </div>
+    <p class="small">${tx("現行表", "現行表")}：${esc(airport.timetableEffectiveAt)} · ${tx("表定時間，未含交通延誤；晚班不代表適合 00:00 航班。", "予定時刻・道路状況により遅延あり。遅い便が00:00のフライトに適するとは限りません。")}</p>`;
+  const route = card => `<article class="transport-route" id="route-${esc(card.id)}" tabindex="-1">
+    <div class="route-heading"><h3>${esc(loc(card.title))}</h3>${card.tag ? `<span class="tag">${esc(loc(card.tag))}</span>` : ""}</div>
+    ${card.id === "haneda-bus" ? busTable : ""}
+    ${list(card.steps, loc, true)}
+    ${card.notes?.length ? `<div class="guide-note">${list(card.notes, loc)}</div>` : ""}
+    ${externalLinks(card.links, loc)}
+  </article>`;
+  return `<div class="page-title"><div><h1>${esc(loc(transportGuide.title))}</h1><p>${esc(loc(transportGuide.intro))}</p></div></div>
+    <aside class="transport-alert">
+      <h2>${esc(loc(transportGuide.airportTitle))}</h2>
+      <p>${esc(loc(transportGuide.airportWarning))}</p>
+      <div class="event-actions"><button class="button secondary" data-jump="transport-${esc(transportGuide.airportSectionId)}">${tx("查看羽田路線與時刻", "羽田への経路・時刻を見る")}</button><button class="button secondary" data-jump="route-haneda-midnight-example">${tx("00:00 起飛・規劃示例", "00:00出発の計画例")}</button></div>
+    </aside>
+    <div class="guide-jump" role="group" aria-label="${tx("交通指南章節", "アクセス案内の項目")}">${transportGuide.sections.map(section => `<button data-jump="transport-${esc(section.id)}">${esc(loc(section.title))}</button>`).join("")}</div>
+    <div class="transport-guide">${transportGuide.sections.map(section => `<section class="guide-section" id="transport-${esc(section.id)}" tabindex="-1"><h2>${esc(loc(section.title))}</h2>${section.summary ? `<p class="guide-intro">${esc(loc(section.summary))}</p>` : ""}${section.cards.map(route).join("")}</section>`).join("")}
+      <section class="airport-checklist guide-section"><h2>${tx("DAY 2 去機場前，先確認", "DAY 2・空港へ向かう前に")}</h2>${list(transportGuide.airportChecklist, loc)}${externalLinks(transportGuide.sourceLinks, loc)}<a class="button secondary" href="#schedule">${tx("回到時間表，安排離場時間", "予定表で出発時間を決める")}</a></section>
+      <p class="guide-verified">${tx("交通資料核實日期", "交通情報の確認日")}：${esc(transportGuide.verifiedAt)} · ${tx("時間皆為 JST。此頁可離線閱讀，班次與運行狀況請出發前連線確認。", "時刻はすべて日本時間。本文はオフラインで読めます。便・運行状況は出発前にオンラインで確認してください。")}</p>
+    </div>`;
 }
