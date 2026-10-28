@@ -29,6 +29,7 @@ web
 - 七個主分頁：總覽、懶人包、時間表、活動、周邊、地圖、我的清單；地圖內另有 `#transport` 交通子頁，也可從總覽與懶人包進入。
 - 已收錄 10 個有固定起訖時間的舞台節目，以及 2 個沒有公布結束時間的間歇會場直播。直播明確標示為非固定舞台場次，不補造結束時間。
 - 時間表可切換行程列表與依時間比例繪製的圖表；圖表左側固定顯示 JST 時間軸，手機可橫向捲動日期。重疊的個人安排並排顯示；沒有結束時間的安排另列。點選時段可閱讀完整介紹、收藏與匯出日曆，也有完整文字版。
+- 鋼琴音樂會與 THE PRIMALS 的節目詳情共用繁中／日文觀賞指南，適用於行程列表、圖表選取詳情及已收藏節目。直接顯示排隊時間未公布、有效 FanFest 入場資格及未列另購音樂會票／預約要求；指定席加購已取消，採自由席且節目間不清場。展開後提供前往舞台、鋼琴著席／THE PRIMALS 原地站立規則、電子票與兩日腕帶、Quick Photo／直播票的不同用途及官方來源。一般早上入場動線不當成晚間音樂會隊列；不補造專用整列開始時間。另附兩張可離線放大的官方入場／舞台示意圖。THE PRIMALS 提醒與暫定羽田 19:15 巴士方案的重疊，不據此保證可觀看部分演出後趕上車。
 - 已收錄 65 個活動、展覽、商品、服務與餐飲項目，提供繁中／日文說明、原名、條件與來源；可依名稱、編號及會場搜尋、收藏。手機詳情分開呈現活動內容、每日開放時間／受理截止與參加前須知，保留費用與限制。
 - 周邊主分頁 `#goods` 分為購買須知與商品目錄。收錄官方會場頁的 33 組商品，提供繁中／日文搜尋、五類篩選、本地商品圖片與放大連結、官方商品頁及含稅 e-STORE 參考價；單件／款式價格單位另有說明，不保證現場售價或庫存。
 - 物販指南保留戶外 #35 商店免兩日通票、QOくん QR code 準備、現金／信用卡／電子錢包／條碼支付、滿 ¥14,000 特典及紀念袋每人 1 個限制，並可與地圖互相連結。兩個官方頁面的營業時間衝突明列來源：商品頁兩日 09:00–21:00，フロア頁 11/1 至 20:30、兩日結束前 30 分鐘停止受理。已於 10/1 結束的網購活動與現場販售分開；日本國內配送及海外發卡限制只適用 e-STORE。
@@ -39,7 +40,7 @@ web
 - 交通子頁提供會場往返、會場之間移動，以及 DAY 2 前往羽田機場的巴士與鐵路方案。晚間巴士表分列海浜幕張站、幕張メッセ中央與 T2／T1／T3 抵達時間；會場末班為 18:35，車站末班為 22:45，後續車站班次不停會場。使用者暫以 DAY 2 後的 11/2 00:00 JST 作規劃範例，並非已確認航班；羽田航廈尚未確認，不沿用先前成田的 T2。明列抵達機場、轉乘與辦理登機的時間需求，不保證看完整場後可趕上飛機。
 - 個人行程支援新增、刪除、搜尋、日期與收藏篩選；`.ics` 匯出將日本時間轉為 UTC，包含開始前 15 分鐘的 DISPLAY alarm。使用者需匯入自己的日曆並確認通知設定；本站沒有背景瀏覽器通知或推播服務。
 - 提供準備建議、自訂待辦、完成勾選、JSON 備份匯出／合併匯入。相同 ID 衝突時保留目前紀錄。語言偏好、收藏與個人資料保存在目前瀏覽器的 localStorage（fanfest-note-v1），沒有登入或跨裝置同步。
-- 離線快取包含應用程式、資料模組、六張官方地圖、雙語懶人包 PNG／HTML、33 張官方商品 WebP 圖片及授權字型子集。只有全部必要資產存在時才顯示離線就緒。外部官方網站仍需網路；瀏覽器可能清理儲存空間，重要筆記應匯出備份。
+- 離線快取包含應用程式、資料模組、六張官方會場地圖、兩張官方入場／舞台 WebP 示意圖、雙語懶人包 PNG／HTML、33 張官方商品 WebP 圖片及授權字型子集。只有全部必要資產存在時才顯示離線就緒。外部官方網站仍需網路；瀏覽器可能清理儲存空間，重要筆記應匯出備份。
 
 ### Open Decisions
 
@@ -59,9 +60,9 @@ web
 - [官方會場物販](https://fanfest.finalfantasyxiv.com/2026/jp/goods/)
 - [官方 e-STORE 活動頁](https://store.jp.square-enix.com/estore/pages/sp_ff14_fanfest2026.aspx)
 
-`data/events.js` 組合 `stages.js`、`activities.js`、`summary.js`，標示 `sourceStatus: verified` 及真正核實日期。`data/apps.js`、`data/transport.js`、`data/goods.js` 與 `data/goods-catalog.js` 分別保存 App、交通、物販指南與商品目錄及各自核實日期。逐項來源與對照記錄見 `docs/SOURCES-STAGES.md`、`docs/SOURCES-ACTIVITIES.md`、`docs/SOURCES-APPS.md`、`docs/SOURCES-TRANSPORT.md`、`docs/SOURCES-GOODS.md` 與 `docs/SOURCES-GOODS-CATALOG.md`；資料格式見 `docs/DATA.md`。
+`data/events.js` 組合 `stages.js`、`activities.js`、`summary.js`，標示 `sourceStatus: verified` 及真正核實日期。`data/apps.js`、`data/transport.js`、`data/concerts.js`、`data/goods.js` 與 `data/goods-catalog.js` 分別保存 App、交通、音樂節目觀賞、物販指南與商品目錄及各自核實日期。逐項來源與對照記錄見 `docs/SOURCES-STAGES.md`、`docs/SOURCES-ACTIVITIES.md`、`docs/SOURCES-APPS.md`、`docs/SOURCES-TRANSPORT.md`、`docs/SOURCES-CONCERTS.md`、`docs/SOURCES-GOODS.md` 與 `docs/SOURCES-GOODS-CATALOG.md`；資料格式見 `docs/DATA.md`。
 
-六張地圖以官方原始網址下載並保存在 `assets/maps/`，保留出處；時間表圖片與再生方式見 `assets/summary/README.md`。翻譯是非官方整理，官方名稱、時間與條件仍以日文原文及後續公告為準。個人安排與準備建議不構成官方事實。
+六張會場地圖以官方原始網址下載並保存在 `assets/maps/`，保留出處；兩張官方最佳化入場／舞台圖另存於 `assets/concerts/`，保留官方下載網址與原始 JPG 連結，不新增地圖選擇器項目；時間表圖片與再生方式見 `assets/summary/README.md`。翻譯是非官方整理，官方名稱、時間與條件仍以日文原文及後續公告為準。個人安排與準備建議不構成官方事實。
 
 ## Product Principles
 
