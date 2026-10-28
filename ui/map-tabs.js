@@ -14,15 +14,16 @@ export function renderMapTabs(maps, selectedMapId, lang) {
   const isMesse = hallAreas.some(({ id }) => id === selectedMapId);
   const venue = isMesse ? "messe" : selectedMapId;
   const venues = [
+    { id: "area-overview", map: "area-overview", label: local("周邊交通", "周辺マップ"), title: local("周邊交通總覽", "周辺アクセスマップ") },
     { id: "messe", map: "messe-entire", label: local("幕張 MESSE", "幕張メッセ"), title: "幕張メッセ" },
     { id: "aeon", map: "aeon", label: "AEON MALL", title: local("AEON MALL 幕張新都心", "イオンモール幕張新都心") },
     { id: "toyosuna", map: "toyosuna", label: local("豐砂公園", "豊砂公園"), title: local("豐砂公園", "豊砂公園") },
-  ].filter((item) => maps.some(({ id }) => id === item.map));
+  ].filter((item) => item.id === "area-overview" || maps.some(({ id }) => id === item.map));
   const currentVenue = venues.find(({ id }) => id === venue) || venues[0];
   const areas = hallAreas.filter((item) => maps.some(({ id }) => id === item.id));
 
   return `<div class="map-picker">
-    <div class="map-venue-choices" role="group" aria-label="${local("選擇會場", "会場を選択")}">
+    <div class="map-venue-choices" role="group" aria-label="${local("選擇地圖範圍", "マップの範囲を選択")}">
       ${venues.map((item) => `<button type="button" class="map-venue-button" data-map-venue="${item.id}" data-map-id="${item.map}" data-map-control="venue-${item.id}" aria-pressed="${venue === item.id}" aria-label="${esc(item.title)}">${esc(item.label)}</button>`).join("")}
     </div>
     <h2 class="map-venue-title">${esc(currentVenue?.title || "")}</h2>

@@ -8,7 +8,7 @@ if site.exists():
     shutil.rmtree(site)
 site.mkdir(parents=True)
 (site / '.nojekyll').write_text('')
-for name in ['index.html', 'styles.css', 'schedule.css', 'guide.css', 'goods.css', 'map-tabs.css', 'concerts.css', 'app.js', 'sw.js', 'manifest.webmanifest']:
+for name in ['index.html', 'styles.css', 'schedule.css', 'guide.css', 'goods.css', 'map-tabs.css', 'concerts.css', 'area-map.css', 'app.js', 'sw.js', 'manifest.webmanifest']:
     shutil.copy2(root / name, site / name)
 for name in ['data', 'ui', 'icons', 'fonts', 'assets']:
     shutil.copytree(root / name, site / name)
