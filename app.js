@@ -2,6 +2,8 @@ import { eventData as data } from "./data/events.js";
 import { appGuide } from "./data/apps.js";
 import { renderTimetable } from "./ui/schedule.js";
 import { renderApps, renderTransport } from "./ui/preparation.js";
+import { renderGoods, renderGoodsResults } from "./ui/goods.js";
+import { goodsGuide } from "./data/goods.js";
 const $ = (s) => document.querySelector(s);
 const icons = {
   home: "M3 10 12 3l9 7v11H3z M9 21v-8h6v8",
@@ -18,6 +20,7 @@ const icons = {
   plus: "M12 4v16 M4 12h16",
   download: "M12 3v12 m-5-5 5 5 5-5 M4 16v5h16v-5",
   pin: "M19 9c0 6-7 12-7 12S5 15 5 9a7 7 0 0 1 14 0 M15 9a3 3 0 1 1-6 0 3 3 0 0 1 6 0",
+  bag: "M5 7h14l2 14H3z M9 8V6a3 3 0 0 1 6 0v2",
 };
 const icon = (name) =>
   `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${icons[name] || icons.info}"/></svg>`;
@@ -100,6 +103,9 @@ let page = location.hash.slice(1) || "home",
   activityMap = "",
   activityView = "events",
   tldrView = "timeline",
+  goodsView = "guide",
+  goodsQuery = "",
+  goodsCategory = "",
   selectedChartEvent = "";
 const tx = (zh, ja) => (state.lang === "ja" ? ja : zh);
 const loc = (o) =>
@@ -193,9 +199,10 @@ const nav = [
   ["home", "home", "總覽", "ホーム"],
   ["tldr", "download", "懶人包", "早見表"],
   ["schedule", "calendar", "時間表", "予定表"],
-  ["activities", "spark", "活動", "アクティビティ"],
+  ["activities", "spark", "活動", "体験"],
+  ["goods", "bag", "周邊", "物販"],
   ["map", "map", "地圖", "マップ"],
-  ["list", "list", "我的清單", "マイリスト"],
+  ["list", "list", "我的清單", "リスト"],
 ];
 function notice() {
   return data.sourceStatus === "verified"
@@ -220,7 +227,7 @@ function sourceRows() {
   return `<div class="source-list">${data.sources.map((s, i) => `<a class="source-row" href="${s.url}" target="_blank" rel="noopener noreferrer"><span class="source-symbol">${icon(["calendar", "list", "spark", "map"][i])}</span><span><strong>${esc(loc(s.title))}</strong><small>${state.lang === "zh" ? esc(s.title.ja) + " · " : ""}${tx("官方日文頁面 · 需連線", "公式ページ · オンライン")}</small></span><span class="arrow">${icon("external")}</span></a>`).join("")}</div>`;
 }
 function home() {
-  return `<section class="hero"><div><h1>${tx("你的 FanFest<br><em>隨行筆記。</em>", "ファンフェスを、<br><em>手のひらに。</em>")}</h1><p>${tx("舞台節目、會場活動與自己的待辦。<br>整理好再出發，現場隨手查。", "ステージ、会場のアクティビティ、自分の予定。<br>出かける前にまとめて、会場でさっと確認。")}</p><div class="event-dates">10.31 <small>SAT</small> <span>—</span> 11.01 <small>SUN</small></div><div class="edition"><b>JAPAN 2026</b><span>FINAL FANTASY XIV FAN FESTIVAL</span></div></div><aside class="field-note"><h2>${tx("今天，從這裡開始", "まずは、ここから")}</h2><a href="#tldr"><span>${tx("兩天重點，一張帶走", "2日間の早見表を保存")}<small>${tx("繁中・日文時間表圖片", "中国語・日本語のタイムライン")}</small></span>${icon("download")}</a><a href="#schedule"><span>${tx("看看節目時間", "ステージの予定を確認")}<small>ステージ・タイムテーブル</small></span>${icon("arrow")}</a><a href="#map"><span>${tx("找到下一個目的地", "次の目的地を探す")}<small>会場マップ</small></span>${icon("arrow")}</a><a href="#transport"><span>${tx("去程、散場與成田機場", "行き帰り・成田空港へ")}<small>${tx("車站、巴士與機場路線", "駅・バス・空港へのルート")}</small></span>${icon("arrow")}</a><a href="#list"><span>${tx("記下你的必做清單", "やりたいことをメモ")}<small>マイリスト</small></span>${icon("arrow")}</a></aside></section>${notice()}<div class="venue-strip">${icon("pin")}<span>${tx("幕張展覽館 1–7 展廳・AEON MALL 幕張新都心・豐砂公園", "幕張メッセ 1〜7ホール・イオンモール幕張新都心・豊砂公園")}<small>${tx("10/31、11/1 皆為 09:00 開場／21:00 結束（預定）", "両日 09:00 開場／21:00 終了予定")}</small></span></div><div class="home-grid"><section><div class="section-heading"><h2>${tx("官方資訊，一次找到", "公式情報へのリンク")}</h2><span>${tx("日文原文", "公式サイト")}</span></div>${sourceRows()}</section><section><div class="section-heading"><h2>${tx("出發前的小準備", "出発前のチェック")}</h2><a href="#list">${tx("全部清單", "すべて見る")} →</a></div>${checkRows(defaults.slice(0, 3))}<p class="small">${tx("這是個人準備建議；正式入場規定請以官方公告為準。", "個人向けの準備メモです。入場条件は公式案内をご確認ください。")}</p><div class="info-block"><h3>${tx("把筆記帶著走", "オフラインでも手元に")}</h3><p>${tx("首次連線開啟後，網站會儲存已收錄的內容、六張官方地圖與懶人包（約 24 MB）。看到「已可離線使用」後，即可在沒訊號時查閱。外部網站仍需網路。", "初回オンライン時に収録済みの内容、公式マップ6枚、早見表（約24 MB）を保存します。「オフライン利用可能」と表示されたら、電波がなくても読めます。外部サイトには接続が必要です。")}</p><div class="status-line" id="offline-status"></div></div></section></div>${practicalInfo()}`;
+  return `<section class="hero"><div><h1>${tx("你的 FanFest<br><em>隨行筆記。</em>", "ファンフェスを、<br><em>手のひらに。</em>")}</h1><p>${tx("舞台節目、會場活動與自己的待辦。<br>整理好再出發，現場隨手查。", "ステージ、会場のアクティビティ、自分の予定。<br>出かける前にまとめて、会場でさっと確認。")}</p><div class="event-dates">10.31 <small>SAT</small> <span>—</span> 11.01 <small>SUN</small></div><div class="edition"><b>JAPAN 2026</b><span>FINAL FANTASY XIV FAN FESTIVAL</span></div></div><aside class="field-note"><h2>${tx("今天，從這裡開始", "まずは、ここから")}</h2><a href="#tldr"><span>${tx("兩天重點，一張帶走", "2日間の早見表を保存")}<small>${tx("繁中・日文時間表圖片", "中国語・日本語のタイムライン")}</small></span>${icon("download")}</a><a href="#schedule"><span>${tx("看看節目時間", "ステージの予定を確認")}<small>ステージ・タイムテーブル</small></span>${icon("arrow")}</a><a href="#map"><span>${tx("找到下一個目的地", "次の目的地を探す")}<small>会場マップ</small></span>${icon("arrow")}</a><a href="#transport"><span>${tx("去程、散場與成田機場", "行き帰り・成田空港へ")}<small>${tx("車站、巴士與機場路線", "駅・バス・空港へのルート")}</small></span>${icon("arrow")}</a><a href="#list"><span>${tx("記下你的必做清單", "やりたいことをメモ")}<small>マイリスト</small></span>${icon("arrow")}</a></aside></section>${notice()}<div class="venue-strip">${icon("pin")}<span>${tx("幕張展覽館 1–7 展廳・AEON MALL 幕張新都心・豐砂公園", "幕張メッセ 1〜7ホール・イオンモール幕張新都心・豊砂公園")}<small>${tx("10/31、11/1 皆為 09:00 開場／21:00 結束（預定）", "両日 09:00 開場／21:00 終了予定")}</small></span></div><div class="home-grid"><section><div class="section-heading"><h2>${tx("官方資訊，一次找到", "公式情報へのリンク")}</h2><span>${tx("日文原文", "公式サイト")}</span></div>${sourceRows()}</section><section><div class="section-heading"><h2>${tx("出發前的小準備", "出発前のチェック")}</h2><a href="#list">${tx("全部清單", "すべて見る")} →</a></div>${checkRows(defaults.slice(0, 3))}<p class="small">${tx("這是個人準備建議；正式入場規定請以官方公告為準。", "個人向けの準備メモです。入場条件は公式案内をご確認ください。")}</p><div class="info-block"><h3>${tx("把筆記帶著走", "オフラインでも手元に")}</h3><p>${tx("首次連線開啟後，網站會儲存已收錄的內容、六張官方地圖、懶人包與商品圖片（約 26 MB）。看到「已可離線使用」後，即可在沒訊號時查閱。外部網站仍需網路。", "初回オンライン時に収録済みの内容、公式マップ6枚、早見表、商品画像（約26 MB）を保存します。「オフライン利用可能」と表示されたら、電波がなくても読めます。外部サイトには接続が必要です。")}</p><div class="status-line" id="offline-status"></div></div></section></div>${practicalInfo()}`;
 }
 function personalEvent(x) {
   return {
@@ -304,7 +311,7 @@ function updateChartDetail(focus = false) {
 }
 function activityDetail(a, compact = false) {
   const related = appGuide.required.filter(app => app.activityIds.includes(a.id));
-  return `<div class="activity-detail"><div class="activity-title"><span class="map-number">${esc(a.number ?? "—")}</span><div><h2>${esc(loc(a.title))}</h2>${jp(a.title)}</div></div>${a.location ? `<div class="activity-place">${icon("pin")}<span>${esc(loc(a.location))}</span></div>` : ""}<section class="activity-description"><h3>${tx("活動內容", "内容")}</h3>${readingCopy(a.description)}</section>${a.notes ? activityNotes(a.notes) : ""}${related.length ? `<div class="activity-apps"><strong>${tx("這個活動需要準備 App", "この体験に必要なアプリ")}</strong><p>${related.map(app => esc(loc(app.title))).join(" · ")}</p><button class="button secondary" data-open-apps>${tx("查看下載與設定", "ダウンロード・準備を見る")}${icon("arrow")}</button></div>` : ""}<div class="event-actions"><button class="button secondary" data-save="${esc(a.id)}" aria-pressed="${state.saved.includes(a.id)}">${icon("bookmark")}${state.saved.includes(a.id) ? tx("已收藏", "保存済み") : tx("加入清單", "リストに追加")}</button>${!compact ? `<a class="button secondary" href="#map" data-location="${esc(a.id)}">${icon("pin")}${tx("在地圖上找", "マップで探す")}</a>` : ""}<a class="small" href="${esc(a.source || source("floors").url)}" target="_blank" rel="noopener noreferrer">${tx("官方原文", "公式情報")} ↗</a></div></div>`;
+  return `<div class="activity-detail"><div class="activity-title"><span class="map-number">${esc(a.number ?? "—")}</span><div><h2>${esc(loc(a.title))}</h2>${jp(a.title)}</div></div>${a.location ? `<div class="activity-place">${icon("pin")}<span>${esc(loc(a.location))}</span></div>` : ""}<section class="activity-description"><h3>${tx("活動內容", "内容")}</h3>${readingCopy(a.description)}</section>${a.notes ? activityNotes(a.notes) : ""}${a.id === "goods-store" ? `<section class="activity-goods"><h3>${tx("物販資訊與營業時間", "物販情報・販売時間")}</h3>${readingCopy(goodsGuide.hoursNote)}<a class="button secondary" href="#goods">${tx("完整購買須知與商品目錄", "購入ガイドとグッズ一覧")}${icon("arrow")}</a></section>` : ""}${related.length ? `<div class="activity-apps"><strong>${tx("這個活動需要準備 App", "この体験に必要なアプリ")}</strong><p>${related.map(app => esc(loc(app.title))).join(" · ")}</p><button class="button secondary" data-open-apps>${tx("查看下載與設定", "ダウンロード・準備を見る")}${icon("arrow")}</button></div>` : ""}<div class="event-actions"><button class="button secondary" data-save="${esc(a.id)}" aria-pressed="${state.saved.includes(a.id)}">${icon("bookmark")}${state.saved.includes(a.id) ? tx("已收藏", "保存済み") : tx("加入清單", "リストに追加")}</button>${!compact ? `<a class="button secondary" href="#map" data-location="${esc(a.id)}">${icon("pin")}${tx("在地圖上找", "マップで探す")}</a>` : ""}<a class="small" href="${esc(a.source || source("floors").url)}" target="_blank" rel="noopener noreferrer">${tx("官方原文", "公式情報")} ↗</a></div></div>`;
 }
 function activityResults() {
   const q = activityQuery.trim().toLowerCase();
@@ -497,6 +504,7 @@ function render() {
     schedule,
     activities,
     tldr,
+    goods: () => renderGoods({ language: state.lang, view: goodsView, query: goodsQuery, category: goodsCategory }),
     map: maps,
     transport: () => mapTransportNav() + renderTransport(state.lang),
     list: myList,
@@ -618,6 +626,11 @@ function calendar(e) {
 document.addEventListener("click", (e) => {
   const b = e.target.closest("button,a");
   if (!b) return;
+  if (b.dataset.goodsView) {
+    goodsView = b.dataset.goodsView;
+    render();
+    document.querySelector(`[data-goods-view="${goodsView}"]`)?.focus({ preventScroll: true });
+  }
   if (b.dataset.scheduleMode) {
     state.scheduleMode = b.dataset.scheduleMode === "chart" ? "chart" : "agenda";
     save();
@@ -805,6 +818,10 @@ document.addEventListener("pointercancel", () => {
   mapDrag = null;
 });
 document.addEventListener("input", (e) => {
+  if (e.target.id === "goods-search") {
+    goodsQuery = e.target.value;
+    $("#goods-results").innerHTML = renderGoodsResults({ language: state.lang, query: goodsQuery, category: goodsCategory });
+  }
   if (e.target.id === "activity-search") {
     activityQuery = e.target.value;
     $("#activity-results").innerHTML = activityResults();
@@ -816,6 +833,10 @@ document.addEventListener("input", (e) => {
   }
 });
 document.addEventListener("change", async (e) => {
+  if (e.target.id === "goods-category") {
+    goodsCategory = e.target.value;
+    $("#goods-results").innerHTML = renderGoodsResults({ language: state.lang, query: goodsQuery, category: goodsCategory });
+  }
   if (e.target.id === "activity-map-filter") {
     activityMap = e.target.value;
     $("#activity-results").innerHTML = activityResults();

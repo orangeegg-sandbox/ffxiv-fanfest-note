@@ -26,10 +26,12 @@ web
 
 ## Capabilities and Constraints
 
-- 六個主分頁：總覽、懶人包、時間表、活動、地圖、我的清單；地圖內另有 `#transport` 交通子頁，也可從總覽與懶人包進入。
+- 七個主分頁：總覽、懶人包、時間表、活動、周邊、地圖、我的清單；地圖內另有 `#transport` 交通子頁，也可從總覽與懶人包進入。
 - 已收錄 10 個有固定起訖時間的舞台節目，以及 2 個沒有公布結束時間的間歇會場直播。直播明確標示為非固定舞台場次，不補造結束時間。
 - 時間表可切換行程列表與依時間比例繪製的圖表；圖表左側固定顯示 JST 時間軸，手機可橫向捲動日期。重疊的個人安排並排顯示；沒有結束時間的安排另列。點選時段可閱讀完整介紹、收藏與匯出日曆，也有完整文字版。
 - 已收錄 65 個活動、展覽、商品、服務與餐飲項目，提供繁中／日文說明、原名、條件與來源；可依名稱、編號及會場搜尋、收藏。手機詳情分開呈現活動內容、每日開放時間／受理截止與參加前須知，保留費用與限制。
+- 周邊主分頁 `#goods` 分為購買須知與商品目錄。收錄官方會場頁的 33 組商品，提供繁中／日文搜尋、五類篩選、本地商品圖片與放大連結、官方商品頁及含稅 e-STORE 參考價；單件／款式價格單位另有說明，不保證現場售價或庫存。
+- 物販指南保留戶外 #35 商店免兩日通票、QOくん QR code 準備、現金／信用卡／電子錢包／條碼支付、滿 ¥14,000 特典及紀念袋每人 1 個限制，並可與地圖互相連結。兩個官方頁面的營業時間衝突明列來源：商品頁兩日 09:00–21:00，フロア頁 11/1 至 20:30、兩日結束前 30 分鐘停止受理。已於 10/1 結束的網購活動與現場販售分開；日本國內配送及海外發卡限制只適用 e-STORE。
 - 六張本地保存的官方原始 JPG 地圖，提供選圖、100–800% 縮放、捲動／滑鼠拖曳、66 個位置熱點與編號索引。選取活動會將其位置帶入可見範圍。活動與舞台可連到對應地圖；同一編號可對應多個活動，也可在同圖有多個位置。幕張與豐砂公園的編號分開計算。
 - 懶人包提供繁中及日文各一張完整的兩日時間表 PNG，包含舞台節目、獨立的會場直播提示、Quick Photo 集合時段與預約重點；中文版本保留日文名稱。圖像由核實資料經程式排版生成，另有可讀取的文字版與 HTML 原稿。
 - 已收錄 5 組預約說明、6 組會場／入場／交通／餐飲資訊，以及舞台座位、直播、攝錄規則。Quick Photo 必須預約的敘述限定於官方預約頁列出的活動；更衣室與寄物另有預約規定。集合時段不等於體驗開始時間。
@@ -37,7 +39,7 @@ web
 - 交通子頁提供會場往返、會場之間移動，以及 DAY 2 前往成田第 2 航廈的巴士與鐵路方案。顯示 3 班從幕張メッセ中央發車的巴士與 T2 抵達時間；末班為會場 16:30、海浜幕張站 16:56、T2 17:36。鐵路備案以空港第2ビル站為目的地。使用者尚未提供航班時間，因此不推定個人最晚離場時間，也不保證看完整場後可趕上飛機。
 - 個人行程支援新增、刪除、搜尋、日期與收藏篩選；`.ics` 匯出將日本時間轉為 UTC，包含開始前 15 分鐘的 DISPLAY alarm。使用者需匯入自己的日曆並確認通知設定；本站沒有背景瀏覽器通知或推播服務。
 - 提供準備建議、自訂待辦、完成勾選、JSON 備份匯出／合併匯入。相同 ID 衝突時保留目前紀錄。語言偏好、收藏與個人資料保存在目前瀏覽器的 localStorage（fanfest-note-v1），沒有登入或跨裝置同步。
-- 離線快取包含應用程式、資料模組、六張官方地圖、雙語懶人包 PNG／HTML 及授權字型子集。只有全部必要資產存在時才顯示離線就緒。外部官方網站仍需網路；瀏覽器可能清理儲存空間，重要筆記應匯出備份。
+- 離線快取包含應用程式、資料模組、六張官方地圖、雙語懶人包 PNG／HTML、33 張官方商品 WebP 圖片及授權字型子集。只有全部必要資產存在時才顯示離線就緒。外部官方網站仍需網路；瀏覽器可能清理儲存空間，重要筆記應匯出備份。
 
 ### Open Decisions
 
@@ -54,8 +56,10 @@ web
 - [會場活動](https://fanfest.finalfantasyxiv.com/2026/jp/floors/)
 - [會場地圖](https://fanfest.finalfantasyxiv.com/2026/jp/maps/)
 - [開催概要](https://fanfest.finalfantasyxiv.com/2026/jp/about/)
+- [官方會場物販](https://fanfest.finalfantasyxiv.com/2026/jp/goods/)
+- [官方 e-STORE 活動頁](https://store.jp.square-enix.com/estore/pages/sp_ff14_fanfest2026.aspx)
 
-`data/events.js` 組合 `stages.js`、`activities.js`、`summary.js`，標示 `sourceStatus: verified` 及真正核實日期。`data/apps.js` 與 `data/transport.js` 分別保存 App 與交通指南及各自核實日期。逐項來源與對照記錄見 `docs/SOURCES-STAGES.md`、`docs/SOURCES-ACTIVITIES.md`、`docs/SOURCES-APPS.md` 與 `docs/SOURCES-TRANSPORT.md`；資料格式見 `docs/DATA.md`。
+`data/events.js` 組合 `stages.js`、`activities.js`、`summary.js`，標示 `sourceStatus: verified` 及真正核實日期。`data/apps.js`、`data/transport.js`、`data/goods.js` 與 `data/goods-catalog.js` 分別保存 App、交通、物販指南與商品目錄及各自核實日期。逐項來源與對照記錄見 `docs/SOURCES-STAGES.md`、`docs/SOURCES-ACTIVITIES.md`、`docs/SOURCES-APPS.md`、`docs/SOURCES-TRANSPORT.md`、`docs/SOURCES-GOODS.md` 與 `docs/SOURCES-GOODS-CATALOG.md`；資料格式見 `docs/DATA.md`。
 
 六張地圖以官方原始網址下載並保存在 `assets/maps/`，保留出處；時間表圖片與再生方式見 `assets/summary/README.md`。翻譯是非官方整理，官方名稱、時間與條件仍以日文原文及後續公告為準。個人安排與準備建議不構成官方事實。
 

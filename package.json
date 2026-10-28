@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "start": "node scripts/serve.mjs",
-    "test": "node tests/timetable.mjs && node tests/offline.mjs && node tests/functional.mjs && node tests/improvements.mjs",
+    "test": "node tests/timetable.mjs && node tests/offline.mjs && node tests/functional.mjs && node tests/improvements.mjs && node tests/goods.mjs",
     "generate:summary": "node scripts/generate-summary.mjs",
     "package": "python3 scripts/package.py"
   },

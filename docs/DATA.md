@@ -1,6 +1,6 @@
 # Verified event data
 
-`data/events.js` combines stage, activity and summary modules into `eventData`. Current `sourceStatus` is `verified`, with a verification date of **2026-10-28**. App and transport guides are separate modules consumed by `ui/preparation.js`, each with its own `verifiedAt`. Source snapshots and translation notes are documented in `SOURCES-STAGES.md`, `SOURCES-ACTIVITIES.md`, `SOURCES-APPS.md` and `SOURCES-TRANSPORT.md`.
+`data/events.js` combines stage, activity and summary modules into `eventData`. Current `sourceStatus` is `verified`, with a verification date of **2026-10-28**. App and transport guides are separate modules consumed by `ui/preparation.js`; merchandise guide/catalog modules are consumed by `ui/goods.js`. Each has its own `verifiedAt`. Source snapshots and translation notes are documented in `SOURCES-STAGES.md`, `SOURCES-ACTIVITIES.md`, `SOURCES-APPS.md`, `SOURCES-TRANSPORT.md`, `SOURCES-GOODS.md` and `SOURCES-GOODS-CATALOG.md`.
 
 Bilingual text fields use `{ zh: 'Traditional Chinese', ja: '日本語' }`. Preserve the exact Japanese title for quick reference. All dates and times describe **Asia/Tokyo (UTC+9)**, independent of the reader's device timezone. IDs must be stable and unique across stage and activity data.
 
@@ -11,6 +11,8 @@ Bilingual text fields use `{ zh: 'Traditional Chinese', ja: '日本語' }`. Pres
 - `summary.js`: generated `summaryImages` metadata with `{ id, lang, title, alt, src, html, verifiedAt, sources, width, height }`. The generator is `scripts/generate-summary.mjs`; do not hand-edit dimensions or generated images.
 - `apps.js`: `appGuide` contains `verifiedAt`, bilingual `intro`, and `required`, `optional`, `browserTools` arrays. Each entry has `{ id, title, scope, purpose, steps, notes, links, source, activityIds }`; links use `{ label, url }`. `activityIds` connects scoped requirements to the existing activity/map records. Keep admission requirements, requirements for a particular activity, and editorial suggestions distinct.
 - `transport.js`: `transportGuide` contains bilingual title, introduction, airport warning, route sections, an airport checklist, source links and `airportBus`. Sections use `{ id, title, summary, cards }`; route cards use `{ id, title, tag, steps, notes, links }`. Airport bus data keeps `timetableEffectiveAt`, `fareEffectiveAt`, `source` and `selectedMesseDepartures` separate from the guide verification date. Each bus row has `{ messe, station, terminal3, terminal2, terminal1 }` as JST clock strings.
+- `goods.js`: `goodsGuide` contains `verifiedAt`, bilingual title/introduction, `locationId`, `quickFacts`, dated `hours`, `hoursNote`, `hoursSources`, ordered/parallel `sections` and official `links`. Preserve both official hours attributions and the existing `goods-store` location ID.
+- `goods-catalog.js`: `merchandiseCatalog` contains `verifiedAt`, campaign/collection/venue source URLs, bilingual introduction/notes, official links and 33 `products`. Each product uses `{ id, title, category, priceYen, priceSource, source, image, imageSource, imageWidth, imageHeight, linkLabel, variants?, priceNote? }`. `priceSource: 'estore'` means a verified tax-inclusive online reference price; `priceNote` scopes single-item or variant pricing.
 
 ## Schedule and activity presentation
 
@@ -31,6 +33,16 @@ Activities and TLDR render the same app guide. The three required groups are the
 | 16:30 | 16:56 | 17:36 |
 
 The current timetable is effective 2026-03-20. Under that table the last listed station departure is 16:56; no airport bus after the planned 21:00 festival close is shown. Preserve the difference between the scheduled 66-minute trip from Messe Chuo and 40 minutes from the station. The rail fallback is a route example via Soga and Chiba to **空港第2ビル駅**; exact Sunday rail departures, fares and total journey time are not verified. No flight time is supplied, so the guide cannot establish a personal latest departure from the event. See `SOURCES-TRANSPORT.md` for boarding, payment, Sunday-service and airport-arrival evidence.
+
+## Merchandise scope and presentation
+
+`#goods` is the seventh primary tab, with purchasing-guide and catalog views. `ui/goods.js` searches Chinese/Japanese names and supports five official categories: GOODS, FASHION, FOOD, MUSIC and BOOKS. Search/category state survives language changes during the session. Each of the 33 official venue product groups has one local 768×768 WebP in `assets/goods/`; its official original URL remains in `imageSource`. Image links enlarge the bundled image, and product links open the official e-STORE page. The perfume group and collectible units retain explicit variant/single-item notes. Product count describes venue groups, not online SKUs or current stock.
+
+The shop is the existing outdoor `goods-store` location, map #35, with links in both directions. Ticket-free purchasing applies to that shop. QOくん creates a browser-based list and QR code, not a payment, reservation or stock hold. The guide separates the ended priority-queue lottery from the ordinary queue and lists the published venue payment methods, ¥14,000 art-board bonus and souvenir-bag limit of one per person.
+
+Keep the official hours disagreement visible with both source links: the dedicated goods page lists both days 09:00–21:00; the floor page lists November 1 until 20:30 and acceptance ending 30 minutes before closing on both days. Neither source is silently treated as a correction.
+
+The supplied e-STORE campaign ended October 1 at 10:00 JST. Its account-accumulated bonus and delivery statements are historical online terms. Current e-STORE purchases do not inherit the ended campaign or venue collection rights. Japan-only delivery and rejection of overseas-issued cards are online-store conditions, not venue-card restrictions. Reference prices, listed products and cached images provide no live stock or venue-price guarantee.
 
 ## Official maps and number mappings
 
@@ -54,11 +66,11 @@ The generator imports stage metadata, but also holds verified photo-slot and res
 ## Updating and offline coverage
 
 1. Read current official pages and linked conditions; preserve source URLs and update the true verification date only after checking.
-2. Update both languages, retain unknown/missing times as unknown, and verify map numbers against original imagery. Recheck app requirement scope/store links and transport direction, effective dates, weekday restrictions, terminal and arrival columns when those guides change.
+2. Update both languages, retain unknown/missing times as unknown, and verify map numbers against original imagery. Recheck app requirement scope/store links and transport direction, effective dates, weekday restrictions, terminal and arrival columns when those guides change. For goods, recheck both hours sources, purchasing restrictions, campaign dates, product-group/SKU matches, price units and original image URLs.
 3. Regenerate summary images and heading-font subsets when affected.
 4. Add new local assets to `sw.js` `APP_FILES` and bump `VERSION` for every release that changes cached data or assets.
 5. Run `npm test`, inspect map and summary rendering, then `npm run package`.
 
-The `2026-10-28-guide-v4` cache includes 28 required assets, including both new UI modules, both guide-data modules, `schedule.css` and `guide.css`, alongside the original maps and generated summary PNG/HTML files. External official pages, app downloads and live routing services are not cached. Personal entries remain separate in browser storage `fanfest-note-v1`; they never become official data. Backup import merges by ID and preserves current entries on collisions.
+The `2026-10-28-goods-v5` cache includes 65 required assets, adding `goods.css`, `ui/goods.js`, both merchandise data modules and all 33 product images to the existing guides, maps, summary PNG/HTML files and fonts. External official pages, QOくん, e-STORE checkout/stock, app downloads and live routing services are not cached. Personal entries remain separate in browser storage `fanfest-note-v1`; they never become official data. Backup import merges by ID and preserves current entries on collisions.
 
 The summary generator also exports `summaryPhotoSessions` keyed by event date. The TLDR text alternative reads the same grouping and times as the PNG generator; keep these synchronized when updating reservations. Broadcast rows must explicitly identify their intermittent nature and lack of a fixed end time.
