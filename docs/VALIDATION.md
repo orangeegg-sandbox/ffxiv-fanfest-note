@@ -16,7 +16,7 @@ Read the four supplied official pages, the linked event overview, ticket/app req
 
 ## Browser checks
 
-Current `npm test`: **43 checks passed**: the unchanged 32 existing checks (5 offline + 27 functional), plus 4 timetable unit checks and 7 improvement browser checks.
+Current test suites: **43 checks passed**: the unchanged 32 existing checks (5 offline + 27 functional), plus 4 timetable unit checks and 7 improvement browser checks. The improvement checks passed after the pinned-axis correction.
 
 The existing suites cover root and subdirectory hosting, complete offline caches and failed downloads, all six primary routes in both languages at 320/390/1280px, official dates/times, bookmarks, Japan-time calendar exports while the browser uses a different timezone, map-number interactions, shared numbers, fit/zoom/auto-pan/drag/reset, image downloads, text equivalents, personal schedules, checklists, backup imports and keyboard navigation.
 
@@ -34,8 +34,8 @@ The documenter compared `DESIGN.md` and `.impeccable/design.json` with `app.js`,
 
 `npm run package` produces `dist/site` and `dist/fanfest-note.zip`. The current package contains **32 static site files**, including `.nojekyll`; the ZIP adds `START-HERE.txt`. ZIP integrity passed. All **28 precache assets** are present, including the six new UI/data/CSS files, all six maps and both summary PNGs. `sw.js` is versioned `2026-10-28-guide-v4`.
 
-Source lives on `main`; `deploy` contains only the packaged static site and excludes development tools, tests and repository configuration. The current extension package is locally verified; pushing this revision and checking its public deployment are the remaining release steps at the time of this record.
+Source lives on `main`; `deploy` contains only the packaged static site and excludes development tools, tests and repository configuration. Implementation commit `bf02956` and deployment commit `0310464` were pushed. GitHub Pages reported the exact deployment commit built successfully.
 
-GitHub Pages is now enabled. Its API reports `build_type: legacy`, source branch `deploy`, source path `/` and status `built`, at https://orangeegg-sandbox.github.io/ffxiv-fanfest-note/ . This verifies the publishing configuration and an existing build, not publication of unpushed local changes. No cloud environment publication was performed.
+GitHub Pages uses `build_type: legacy`, source branch `deploy` and source path `/`, at https://orangeegg-sandbox.github.io/ffxiv-fanfest-note/ . The public service worker serves `2026-10-28-guide-v4`. A fresh 390px browser on that public URL verified the chart's ten fixed events, selected event details, three required App groups in TLDR, the three-row T2 bus table, Japanese transport content and a complete offline reload, with no JavaScript errors. No cloud environment publication was performed.
 
 Content is a snapshot verified on October 28, 2026; later official changes require reverification and regeneration. Calendar alarms depend on the user's calendar application; the website does not send background push notifications.
