@@ -49,8 +49,8 @@ try {
   pass('goods guide preserves ticket eligibility, official hours discrepancy, payment, QR preparation and separate online campaign information');
 
   await page.locator('.goods-main-actions [data-location="goods-store"]').click();
-  await page.locator('#map-select').waitFor();
-  assert.equal(await page.locator('#map-select').inputValue(), 'messe-entire');
+  await page.locator('#map-canvas[data-map-id]').waitFor();
+  assert.equal(await page.locator('#map-canvas').getAttribute('data-map-id'), 'messe-entire');
   assert.match(await page.locator('#map-selection').innerText(), /商品|グッズ/);
   assert.equal(await page.locator('.map-pin.selected').first().innerText(), '35');
   await page.locator('#navigation a[href="#goods"]').click();

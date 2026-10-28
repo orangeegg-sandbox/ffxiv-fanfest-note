@@ -1,15 +1,17 @@
 /* Bump VERSION whenever a bundled asset changes before deployment. */
-const VERSION = "2026-10-28-goods-v5";
+const VERSION = "2026-10-28-haneda-v6";
 const APP_FILES = [
   "./index.html",
   "./styles.css",
   "./schedule.css",
   "./guide.css",
   "./goods.css",
+  "./map-tabs.css",
   "./app.js",
   "./ui/schedule.js",
   "./ui/preparation.js",
   "./ui/goods.js",
+  "./ui/map-tabs.js",
   "./data/events.js",
   "./data/stages.js",
   "./data/activities.js",

@@ -3,6 +3,7 @@ import { appGuide } from "./data/apps.js";
 import { renderTimetable } from "./ui/schedule.js";
 import { renderApps, renderTransport } from "./ui/preparation.js";
 import { renderGoods, renderGoodsResults } from "./ui/goods.js";
+import { renderMapTabs, getMapTabKeyboardTarget } from "./ui/map-tabs.js";
 import { goodsGuide } from "./data/goods.js";
 const $ = (s) => document.querySelector(s);
 const icons = {
@@ -156,7 +157,7 @@ function viewSwitch(attribute, selected, items, label) {
   return `<div class="view-switch" role="group" aria-label="${esc(label)}">${items.map(([value, text]) => `<button type="button" ${attribute}="${value}" aria-pressed="${selected === value}">${esc(text)}</button>`).join("")}</div>`;
 }
 function mapTransportNav() {
-  return `<nav class="section-nav" aria-label="${tx("地圖與交通", "マップ・アクセス")}"><a href="#map" ${page === "map" ? 'aria-current="page"' : ""}>${tx("會場地圖", "会場マップ")}</a><a href="#transport" ${page === "transport" ? 'aria-current="page"' : ""}>${tx("交通・成田機場", "アクセス・成田空港")}</a></nav>`;
+  return `<nav class="section-nav" aria-label="${tx("地圖與交通", "マップ・アクセス")}"><a href="#map" ${page === "map" ? 'aria-current="page"' : ""}>${tx("會場地圖", "会場マップ")}</a><a href="#transport" ${page === "transport" ? 'aria-current="page"' : ""}>${tx("交通・羽田機場", "アクセス・羽田空港")}</a></nav>`;
 }
 const defaults = [
   {
@@ -227,7 +228,7 @@ function sourceRows() {
   return `<div class="source-list">${data.sources.map((s, i) => `<a class="source-row" href="${s.url}" target="_blank" rel="noopener noreferrer"><span class="source-symbol">${icon(["calendar", "list", "spark", "map"][i])}</span><span><strong>${esc(loc(s.title))}</strong><small>${state.lang === "zh" ? esc(s.title.ja) + " · " : ""}${tx("官方日文頁面 · 需連線", "公式ページ · オンライン")}</small></span><span class="arrow">${icon("external")}</span></a>`).join("")}</div>`;
 }
 function home() {
-  return `<section class="hero"><div><h1>${tx("你的 FanFest<br><em>隨行筆記。</em>", "ファンフェスを、<br><em>手のひらに。</em>")}</h1><p>${tx("舞台節目、會場活動與自己的待辦。<br>整理好再出發，現場隨手查。", "ステージ、会場のアクティビティ、自分の予定。<br>出かける前にまとめて、会場でさっと確認。")}</p><div class="event-dates">10.31 <small>SAT</small> <span>—</span> 11.01 <small>SUN</small></div><div class="edition"><b>JAPAN 2026</b><span>FINAL FANTASY XIV FAN FESTIVAL</span></div></div><aside class="field-note"><h2>${tx("今天，從這裡開始", "まずは、ここから")}</h2><a href="#tldr"><span>${tx("兩天重點，一張帶走", "2日間の早見表を保存")}<small>${tx("繁中・日文時間表圖片", "中国語・日本語のタイムライン")}</small></span>${icon("download")}</a><a href="#schedule"><span>${tx("看看節目時間", "ステージの予定を確認")}<small>ステージ・タイムテーブル</small></span>${icon("arrow")}</a><a href="#map"><span>${tx("找到下一個目的地", "次の目的地を探す")}<small>会場マップ</small></span>${icon("arrow")}</a><a href="#transport"><span>${tx("去程、散場與成田機場", "行き帰り・成田空港へ")}<small>${tx("車站、巴士與機場路線", "駅・バス・空港へのルート")}</small></span>${icon("arrow")}</a><a href="#list"><span>${tx("記下你的必做清單", "やりたいことをメモ")}<small>マイリスト</small></span>${icon("arrow")}</a></aside></section>${notice()}<div class="venue-strip">${icon("pin")}<span>${tx("幕張展覽館 1–7 展廳・AEON MALL 幕張新都心・豐砂公園", "幕張メッセ 1〜7ホール・イオンモール幕張新都心・豊砂公園")}<small>${tx("10/31、11/1 皆為 09:00 開場／21:00 結束（預定）", "両日 09:00 開場／21:00 終了予定")}</small></span></div><div class="home-grid"><section><div class="section-heading"><h2>${tx("官方資訊，一次找到", "公式情報へのリンク")}</h2><span>${tx("日文原文", "公式サイト")}</span></div>${sourceRows()}</section><section><div class="section-heading"><h2>${tx("出發前的小準備", "出発前のチェック")}</h2><a href="#list">${tx("全部清單", "すべて見る")} →</a></div>${checkRows(defaults.slice(0, 3))}<p class="small">${tx("這是個人準備建議；正式入場規定請以官方公告為準。", "個人向けの準備メモです。入場条件は公式案内をご確認ください。")}</p><div class="info-block"><h3>${tx("把筆記帶著走", "オフラインでも手元に")}</h3><p>${tx("首次連線開啟後，網站會儲存已收錄的內容、六張官方地圖、懶人包與商品圖片（約 26 MB）。看到「已可離線使用」後，即可在沒訊號時查閱。外部網站仍需網路。", "初回オンライン時に収録済みの内容、公式マップ6枚、早見表、商品画像（約26 MB）を保存します。「オフライン利用可能」と表示されたら、電波がなくても読めます。外部サイトには接続が必要です。")}</p><div class="status-line" id="offline-status"></div></div></section></div>${practicalInfo()}`;
+  return `<section class="hero"><div><h1>${tx("你的 FanFest<br><em>隨行筆記。</em>", "ファンフェスを、<br><em>手のひらに。</em>")}</h1><p>${tx("舞台節目、會場活動與自己的待辦。<br>整理好再出發，現場隨手查。", "ステージ、会場のアクティビティ、自分の予定。<br>出かける前にまとめて、会場でさっと確認。")}</p><div class="event-dates">10.31 <small>SAT</small> <span>—</span> 11.01 <small>SUN</small></div><div class="edition"><b>JAPAN 2026</b><span>FINAL FANTASY XIV FAN FESTIVAL</span></div></div><aside class="field-note"><h2>${tx("今天，從這裡開始", "まずは、ここから")}</h2><a href="#tldr"><span>${tx("兩天重點，一張帶走", "2日間の早見表を保存")}<small>${tx("繁中・日文時間表圖片", "中国語・日本語のタイムライン")}</small></span>${icon("download")}</a><a href="#schedule"><span>${tx("看看節目時間", "ステージの予定を確認")}<small>ステージ・タイムテーブル</small></span>${icon("arrow")}</a><a href="#map"><span>${tx("找到下一個目的地", "次の目的地を探す")}<small>会場マップ</small></span>${icon("arrow")}</a><a href="#transport"><span>${tx("去程、散場與羽田機場", "行き帰り・羽田空港へ")}<small>${tx("車站、巴士與機場路線", "駅・バス・空港へのルート")}</small></span>${icon("arrow")}</a><a href="#list"><span>${tx("記下你的必做清單", "やりたいことをメモ")}<small>マイリスト</small></span>${icon("arrow")}</a></aside></section>${notice()}<div class="venue-strip">${icon("pin")}<span>${tx("幕張展覽館 1–7 展廳・AEON MALL 幕張新都心・豐砂公園", "幕張メッセ 1〜7ホール・イオンモール幕張新都心・豊砂公園")}<small>${tx("10/31、11/1 皆為 09:00 開場／21:00 結束（預定）", "両日 09:00 開場／21:00 終了予定")}</small></span></div><div class="home-grid"><section><div class="section-heading"><h2>${tx("官方資訊，一次找到", "公式情報へのリンク")}</h2><span>${tx("日文原文", "公式サイト")}</span></div>${sourceRows()}</section><section><div class="section-heading"><h2>${tx("出發前的小準備", "出発前のチェック")}</h2><a href="#list">${tx("全部清單", "すべて見る")} →</a></div>${checkRows(defaults.slice(0, 3))}<p class="small">${tx("這是個人準備建議；正式入場規定請以官方公告為準。", "個人向けの準備メモです。入場条件は公式案内をご確認ください。")}</p><div class="info-block"><h3>${tx("把筆記帶著走", "オフラインでも手元に")}</h3><p>${tx("首次連線開啟後，網站會儲存已收錄的內容、六張官方地圖、懶人包與商品圖片（約 26 MB）。看到「已可離線使用」後，即可在沒訊號時查閱。外部網站仍需網路。", "初回オンライン時に収録済みの内容、公式マップ6枚、早見表、商品画像（約26 MB）を保存します。「オフライン利用可能」と表示されたら、電波がなくても読めます。外部サイトには接続が必要です。")}</p><div class="status-line" id="offline-status"></div></div></section></div>${practicalInfo()}`;
 }
 function personalEvent(x) {
   return {
@@ -376,7 +377,7 @@ function mapLegend() {
 function mapCanvas() {
   const map = activeMap();
   if (!map) return "";
-  return `<div class="map-canvas" id="map-canvas" style="width:${mapZoom}%"><img id="venue-map" draggable="false" src="${esc(map.src)}" width="${map.width || 1600}" height="${map.height || 1000}" alt="${esc(loc(map.title))} · ${tx("官方地圖", "公式マップ")}">${(
+  return `<div class="map-canvas" id="map-canvas" data-map-id="${esc(map.id)}" style="width:${mapZoom}%"><img id="venue-map" draggable="false" src="${esc(map.src)}" width="${map.width || 1600}" height="${map.height || 1000}" alt="${esc(loc(map.title))} · ${tx("官方地圖", "公式マップ")}">${(
     map.hotspots || []
   )
     .map((p, pointIndex) => {
@@ -422,7 +423,8 @@ function maps() {
         "公式マップの番号から内容を確認。拡大・スクロールして、番号を選んでください。",
       ),
     ) +
-    `<div class="map-toolbar"><label for="map-select">${tx("選擇地圖", "マップを選択")}</label><select id="map-select">${data.maps.map((m) => `<option value="${esc(m.id)}" ${m.id === map.id ? "selected" : ""}>${esc(loc(m.title))}</option>`).join("")}</select><a class="small" id="map-original" href="${esc(map.source)}" target="_blank" rel="noopener noreferrer">${tx("官方原圖", "公式の原図")} ↗</a></div><div class="map-workspace"><section><div class="map-controls"><button class="button secondary" data-zoom="-25" aria-label="${tx("縮小", "縮小")}" ${mapZoom <= 100 ? "disabled" : ""}>−</button><span id="zoom-label">${mapZoom}%</span><button class="button secondary" data-zoom="25" aria-label="${tx("放大", "拡大")}" ${mapZoom >= 800 ? "disabled" : ""}>＋</button><button class="button secondary" data-reset-map>${tx("重設", "リセット")}</button></div><div class="map-viewport" tabindex="0" aria-label="${tx("可捲動的官方會場地圖", "スクロール可能な公式会場マップ")}">${mapCanvas()}</div><p class="small">${tx("編號依各地圖分開計算；請同時核對會場名稱。官方底圖 © SQUARE ENIX。", "番号はマップごとに異なります。会場名も確認してください。公式マップ © SQUARE ENIX。")}</p><div id="map-selection" tabindex="-1" aria-live="polite">${mapSelection()}</div></section><aside><div class="section-heading"><h2>${tx("編號索引", "番号で探す")}</h2></div><div id="map-legend">${mapLegend()}</div></aside></div>${practicalInfo()}`
+    renderMapTabs(data.maps, selectedMapId, state.lang) +
+    `<div class="map-source-row"><a class="small" id="map-original" href="${esc(map.source)}" target="_blank" rel="noopener noreferrer">${tx("官方原圖", "公式の原図")} ↗</a></div><div class="map-workspace" id="map-panel" ${["messe-entire", "hall1-3", "hall4-6", "hall7"].includes(map.id) ? `role="tabpanel" aria-labelledby="map-tab-${esc(map.id)}"` : `role="region" aria-label="${esc(loc(map.title))}"`}><section><div class="map-controls"><button class="button secondary" data-zoom="-25" aria-label="${tx("縮小", "縮小")}" ${mapZoom <= 100 ? "disabled" : ""}>−</button><span id="zoom-label">${mapZoom}%</span><button class="button secondary" data-zoom="25" aria-label="${tx("放大", "拡大")}" ${mapZoom >= 800 ? "disabled" : ""}>＋</button><button class="button secondary" data-reset-map>${tx("重設", "リセット")}</button></div><div class="map-viewport" tabindex="0" aria-label="${tx("可捲動的官方會場地圖", "スクロール可能な公式会場マップ")}">${mapCanvas()}</div><p class="small">${tx("編號依各地圖分開計算；請同時核對會場名稱。官方底圖 © SQUARE ENIX。", "番号はマップごとに異なります。会場名も確認してください。公式マップ © SQUARE ENIX。")}</p><div id="map-selection" tabindex="-1" aria-live="polite">${mapSelection()}</div></section><aside><div class="section-heading"><h2>${tx("編號索引", "番号で探す")}</h2></div><div id="map-legend">${mapLegend()}</div></aside></div>${practicalInfo()}`
   );
 }
 function summaryPhotoText(date){
@@ -441,7 +443,7 @@ function tldr() {
         "画像を端末に保存すれば、電波がなくても確認できます。中国語・日本語の各1枚。時刻は日本時間です。",
       ),
     ) +
-    `<div class="guide-toolbar">${viewSwitch("data-tldr-view", tldrView, [["timeline", tx("時間表圖片", "早見表画像")], ["apps", tx("必備與選用 App", "必要・便利なアプリ")]], tx("懶人包內容", "早見表の内容"))}<a class="text-link" href="#transport">${tx("交通・成田機場", "アクセス・成田空港")} ${icon("arrow")}</a></div>` +
+    `<div class="guide-toolbar">${viewSwitch("data-tldr-view", tldrView, [["timeline", tx("時間表圖片", "早見表画像")], ["apps", tx("必備與選用 App", "必要・便利なアプリ")]], tx("懶人包內容", "早見表の内容"))}<a class="text-link" href="#transport">${tx("交通・羽田機場", "アクセス・羽田空港")} ${icon("arrow")}</a></div>` +
     (tldrView === "apps" ? renderApps(state.lang) : `<div class="summary-actions"><a class="button" id="download-summary" href="./assets/summary/summary-${language}.png" download="fanfest-2026-${language}.png">${icon("download")}${tx("下載繁中懶人包", "日本語の早見表を保存")}</a><a class="button secondary" href="./assets/summary/summary-${language === "zh" ? "ja" : "zh"}.png" download="fanfest-2026-${language === "zh" ? "ja" : "zh"}.png">${tx("另存日文版", "中国語版も保存")}</a></div><p class="small">${tx("若手機改為開啟圖片，可長按圖片儲存。整理日期：", "画像が開いた場合は、長押しして保存してください。確認日：")}${esc(data.verifiedAt)} · ${tx("節目可能調整，以官方公告為準。", "内容は変更になる場合があります。公式発表をご確認ください。")}</p><a class="summary-preview" href="./assets/summary/summary-${language}.png" target="_blank" aria-label="${tx("開啟原尺寸時間表圖片", "タイムライン画像を原寸で開く")}"><img src="./assets/summary/summary-${language}.png" width="${sheet.width}" height="${sheet.height}" alt="${tx("10月31日及11月1日 FanFest 舞台節目與預約重點總覽；相同節目資料可於下方文字版閱讀。", "10月31日・11月1日のファンフェスのステージと予約の要点。予定の内容は下のテキストでも読めます。")}" loading="eager"></a><details class="summary-text"><summary>${tx("閱讀文字版時間表", "タイムラインをテキストで読む")}</summary>${data.dates
       .map(
         (date) =>
@@ -623,9 +625,24 @@ function calendar(e) {
     ),
   );
 }
+document.addEventListener("keydown", (event) => {
+  const tab = getMapTabKeyboardTarget(event);
+  if (!tab) return;
+  event.preventDefault();
+  tab.click();
+});
 document.addEventListener("click", (e) => {
   const b = e.target.closest("button,a");
   if (!b) return;
+  if (b.dataset.mapControl && data.maps.some(map => map.id === b.dataset.mapId)) {
+    selectedMapId = b.dataset.mapId;
+    selectedActivityId = "";
+    selectedPointIndex = null;
+    mapZoom = 100;
+    const control = b.dataset.mapControl;
+    render();
+    document.querySelector(`[data-map-control="${control}"]`)?.focus({ preventScroll: true });
+  }
   if (b.dataset.goodsView) {
     goodsView = b.dataset.goodsView;
     render();
@@ -855,14 +872,6 @@ document.addEventListener("change", async (e) => {
     filterDate = e.target.value;
     $("#event-results").innerHTML = eventResults();
     updateChartDetail();
-  }
-  if (e.target.id === "map-select") {
-    selectedMapId = e.target.value;
-    selectedActivityId = "";
-    selectedPointIndex = null;
-    mapZoom = 100;
-    render();
-    $("#map-select").focus();
   }
   if (e.target.id === "import-notes") {
     const f = e.target.files[0];

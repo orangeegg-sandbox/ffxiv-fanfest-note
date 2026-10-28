@@ -1,63 +1,80 @@
 # Transportation sources — verified 2026-10-28
 
-All clock times in `data/transport.js` are Japan Standard Time. Travel planning is for October 31–November 1, 2026; November 1 is a Sunday. Data is a static snapshot, not a live connection guarantee. The user specified **Narita Terminal 2**, so airport route cards prioritize T2 and **Airport Terminal 2 station / 空港第2ビル駅**. No flight time or airline has yet been supplied, so no personal leave-by time is asserted.
+All clock times in `data/transport.js` are **Japan Standard Time**. Event travel is for October 31–November 1, 2026; November 1 is a Sunday. This is an offline source snapshot, not a live connection guarantee.
+
+The user corrected the day-two destination to **Haneda Airport**. The earlier Terminal 2 answer applied to the previous airport and is **not carried over**. Haneda terminal, airline and actual flight remain unconfirmed. The user asked to skip those details for now and use **00:00** as an assumption. The site therefore labels **November 2, 2026, 00:00 JST**, immediately after day two, as a provisional example. November 1 at 00:00 would instead precede day two and must not be confused with it. Current route data and links supersede the previous airport guidance.
 
 ## Venue access and local travel
 
-- https://www.m-messe.co.jp/access/ — official Makuhari Messe access page. Read October 28, 2026. Explicitly states JR Keiyo Line **Kaihin-Makuhari station: about 5 minutes on foot**, **Makuhari-Toyosuna station: about 20 minutes on foot**, and **Makuhari-Hongo station → Makuhari Messe Chuo bus: about 17 minutes**. Walking durations are general venue-access estimates, not the event security queue or a specific hall entrance. Provides return bus-stop maps and official operator timetable links.
-- https://fanfest.finalfantasyxiv.com/2026/jp/about/ — event hours, separate entrance queues and inter-venue shuttle information. The event shuttle boards at **Messe central rotary stop 1**. Cross Wave Makuhari service is limited to changing-room/cloakroom users. Do not confuse this with the Narita route at **stop 3**. Both days have a planned 21:00 close.
-- https://fanfest.finalfantasyxiv.com/2026/jp/maps/ — inter-venue map and destination context. No invented exact walk duration between the exhibition hall, mall and Toyosuna Park.
+- https://www.m-messe.co.jp/access/ — official Makuhari Messe access page, read October 28, 2026. States JR Keiyo Line **Kaihin-Makuhari station: about 5 minutes on foot**, **Makuhari-Toyosuna station: about 20 minutes on foot**, and **Makuhari-Hongo station → Makuhari Messe Chuo bus: about 17 minutes**. These are general venue estimates, excluding security queues and movement to a particular hall. The page links directly to the current Haneda bus route below.
+- https://fanfest.finalfantasyxiv.com/2026/jp/about/ — event hours, entrance queues and inter-venue shuttles. Event shuttle: **Messe central rotary stop 1**. Cross Wave Makuhari service is limited to changing-room/cloakroom users. The Haneda airport bus instead uses **stop 3**. Both event days have a planned **21:00 close**.
+- https://fanfest.finalfantasyxiv.com/2026/jp/maps/ — inter-venue map and destination context. No invented exact walking duration between the halls, mall and Toyosuna Park.
 
-The mall's access URL returned HTTP 406 to the research client, so no walking-time or station-adjacency claim was derived from that unavailable page.
+The mall's access URL previously returned HTTP 406, so it is not evidence for a specific walking-time claim.
 
-## Narita Airport direct bus
+## Haneda Airport direct bus
 
-Current official route page (HTML timetable, not a PDF):
+**Current official route:** https://www.keiseibus.co.jp/express-bus/90208-2/
 
-https://www.keiseibus.co.jp/express-bus/90105-2/
+Title: **羽田空港 ～ 千葉中央駅・千葉駅・千葉みなと駅・稲毛海岸駅・検見川浜駅・幕張新都心**. Read October 28, 2026. Makuhari Messe's official access page links directly to this route. The airport-bound table states **時刻：2026年02月01日改正　運賃：2026年02月01日改定**. Verification date and effective date are distinct.
 
-Page title: **成田空港 ～ 稲毛海岸駅・海浜幕張駅**. The Makuhari Messe website links directly to this current page. The old `/kousoku/nrt16.html` URL redirects to the operator homepage and was not used as timetable evidence.
+The route page publishes one airport-bound timetable, with no weekday/Sunday split or operating-day markers attached to these services. It can therefore support planning for Sunday, November 1 under the current published schedule. This does not assert event-specific extra buses or override subsequent service notices.
 
-The route page states **時刻：2026年03月20日改正　運賃：2024年04月01日改定**. Verification date (October 28, 2026) is distinct from these effective dates.
+The site's table is explicitly a **selected evening subset**, not the full all-day timetable. Cells were extracted from the same aligned columns in the airport-bound table:
 
-Read the airport-bound table, preserving column alignment. Services that stop at **幕張メッセ中央** are:
-
-| Messe Chuo departure | Kaihin-Makuhari departure | T3 arrival | T2 arrival | T1 arrival |
+| Kaihin-Makuhari departure | Messe Chuo departure | T2 arrival | T1 arrival | T3 arrival |
 | --- | --- | --- | --- | --- |
-| 13:14 | 13:40 | 14:17 | 14:20 | 14:25 |
-| 14:34 | 15:00 | 15:37 | 15:40 | 15:45 |
-| 16:30 | 16:56 | 17:33 | 17:36 | 17:41 |
+| 18:30 | 18:35 | 19:17 | 19:22 | 19:29 |
+| 18:45 | Does not stop | 19:27 | 19:32 | 19:39 |
+| 19:15 | Does not stop | 19:57 | 20:02 | 20:09 |
+| 19:40 | Does not stop | 20:17 | 20:22 | 20:29 |
+| 20:10 | Does not stop | 20:45 | 20:50 | 20:57 |
+| 20:45 | Does not stop | 21:20 | 21:25 | 21:32 |
+| 21:15 | Does not stop | 21:50 | 21:55 | 22:02 |
+| 21:45 | Does not stop | 22:20 | 22:25 | 22:32 |
+| 22:45 | Does not stop | 23:20 | 23:25 | 23:32 |
 
-These are the three services boarding at Messe Chuo, **not** all services boarding at Kaihin-Makuhari. The station's last published airport-bound departure is **16:56**, with arrival at T3 17:33, T2 17:36 and T1 17:41. The station has additional departures, including 16:25. No airport bus after the 21:00 event close is shown on this route.
+The source uses a down-arrow in the Messe cells after 18:35, meaning these services do not board there; the data represents this as `null`, not as a departure time. The **18:30 station service visits Messe at 18:35**, so station and venue departures must not be reversed. Airport stop order is **T2 → T1 → T3**.
 
-The only weekday marker in the airport-bound table is **京成Ｅ 成空★** for the column departing Kaihin-Makuhari at **07:42**. Footnote: **★印：平日のみ運行（但し、12/30〜1/3は運行なし）**. None of the three Messe services or the 16:56 last station departure has this marker. They are therefore represented as available for Sunday planning under the current published table, with a direction to check service notices before travel; no event-specific extra service is assumed.
-
+- Last **Messe Chuo** airport-bound departure: **18:35**.
+- Last **Kaihin-Makuhari station** airport-bound departure: **22:45**.
+- Earlier venue departures also exist. The UI links to the full official table.
 - Messe Chuo boarding: **3番のりば**.
-- Kaihin-Makuhari boarding: **北口3番のりば**.
-- Fare to airport: **1,200円（小児600円）**, from both stops.
-- Scheduled station-to-terminal durations calculated from the above aligned columns: **37 / 40 / 45 minutes** to T3 / T2 / T1.
-- Messe Chuo-to-terminal durations: **63 / 66 / 71 minutes**, because the bus visits hotels before Kaihin-Makuhari. Do not describe this as a 40-minute trip from the venue.
-- T2-focused UI presents all three Messe services and their **14:20 / 15:40 / 17:36 T2 arrivals** in a visible three-column timetable before the boarding steps. It gives **40 minutes from Kaihin-Makuhari / 66 minutes from Messe Chuo** as scheduled travel durations, not crowd- or traffic-adjusted trip budgets.
+- Kaihin-Makuhari boarding: **3番のりば**. The current route's text labels this stop 3 without naming the station exit, so the guide repeats that exact supported detail and provides the official stop-map link.
+- Fare from either stop to any listed Haneda terminal: **1,500円（小児750円）**.
+- Evening scheduled station-to-terminal duration calculated from the displayed rows: **35–47 minutes to T2**, **47–59 minutes to T3**. These are bus timetable durations, excluding walking, waiting, traffic delay and movement to airline counters.
 - Airport-bound booking wording: **ご予約・前売りは承っておりません。**
-- Airport-bound payment: **運賃は乗車時にバス車内にて、現金・交通系ICカード・回数券にてお支払いください。**
-- **クレジットカードでのお支払いはできません。** The airport-origin ticket-counter payment rules are different and must not be applied to the venue-to-airport direction.
+- Airport-bound payment: **ご乗車の際に、現金・交通系ICカード（PASMO、Suica等）でお支払いください。**
+- **クレジットカードでのお支払いはできません。** Airport-origin booking/payment rules elsewhere on the same page must not be applied in reverse.
 
-Service status: https://www.keiseibus.co.jp/operation-status/
+Service notices: https://www.keiseibus.co.jp/operation-status/
 
-Congestion, full buses and last-minute changes are not predicted. Flight planning must include more than the published in-vehicle duration.
+The site distinguishes the last available bus from a sensible service for the assumed flight. The 22:45 bus's existence is not evidence that a 00:00 departure can be caught. Even the 21:15 service is scheduled to reach T3 at 22:02, less than two hours before the illustrative flight, before counter access and airport procedures. Full buses, queues, road congestion and temporary changes are not predicted.
 
-## Railway fallback and terminals
+## Railway fallback and terminal selection
 
-- https://www.jreast.co.jp/map/pdf/map_tokyo.pdf — JR East official Tokyo-area railway map, retrieved successfully October 28, 2026. Supports the route topology **Kaihin-Makuhari → Soga (Keiyo Line) → Chiba (Uchibo/Sotobo Line toward Chiba) → airport (Sobu Main/Narita Line airport connection)**.
-- https://www.narita-airport.jp/ja/access/train/ — airport rail access and official route-search entry point. Confirms **Narita Airport station for T1**, **Airport Terminal 2 station for T2/T3**; T3 requires additional access. Its station-access paragraph gives **about 5 minutes on foot from Airport Terminal 2 station to T2**. This does not assert arrival at a particular check-in counter in five minutes. The guide does not promise a through service from every Chiba departure or equate Narita city station with the airport.
-- https://www.narita-airport.jp/ja/access/shuttlebus/ — official inter-terminal transfer guidance.
+Official sources read successfully October 28, 2026:
 
-This railway path is an editorial route example based on official network information. Exact Sunday departure times, connection margins, fares, last trains and total travel duration were **not** verified, and are intentionally not asserted. The page directs readers to search with November 1 and their required airport arrival time. Rail availability alone does not imply that a particular flight is still catchable.
+- https://www.jreast.co.jp/map/pdf/map_tokyo.pdf — JR East Tokyo-area network map. Supports **Kaihin-Makuhari → Tokyo on Keiyo Line**, then **Tokyo → Shinagawa on Yamanote or Keihin-Tohoku Line**. The walking transfer from Tokyo's Keiyo platforms to other JR platforms needs additional allowance; no exact walk duration is asserted.
+- https://www.keikyu.co.jp/ride/kakueki/ — Keikyu station list. Shinagawa's entry lists JR Yamanote and Keihin-Tohoku connections; airport station names are explicitly **羽田空港第3ターミナル (KK16)** and **羽田空港第1・第2ターミナル (KK17)**.
+- https://www.keikyu.co.jp/ride/kakueki/pdf/ros_vertical_map.pdf — current official Keikyu network map linked by its station-list page. Supports **Shinagawa → Keikyu airport direction**, with destination/connection checks rather than assuming every southbound train reaches the airport.
+- https://www.keikyu.co.jp/visit/haneda-airport/ — official airport-access guide and route/fare search. Explicitly warns: **一部国際線ご利用のお客さまは、第2ターミナル出発の場合がございますのでご確認ください。** International travel alone does not imply T3.
+- https://tokyo-haneda.com/access/train/index.html — airport railway access. Confirms direct Keikyu and Tokyo Monorail connections and links to operator information. T1 and T2 railway access is on B1F; the guide uses terminal-specific station names rather than treating airport arrival as arrival at a check-in counter.
+- https://tokyo-haneda.com/access/travel_between_terminals/index.html — airport inter-terminal guidance. Free terminal shuttle buses exist; T1/T2 also have an underground connecting passage. The page has a temporary-operation notice effective August 18, 2026. The guide links to it without freezing shuttle intervals or representing Keikyu/monorail as free to all passengers: free rail transfer coupons are only for eligible connecting-flight passengers.
 
-## Airport arrival planning
+The railway route is a **topology example** supported by the official network. Exact November 1 evening departures, connection margins, total travel duration, fares and last trains have **not** been verified and are not asserted. Users are directed to search using the actual date and required airport arrival time. The route does not guarantee a particular flight can still be caught after the event.
 
-https://www.narita-airport.jp/ja/airportguide/inter-dep/
+## The provisional midnight plan
 
-Official international-departure guide states **出発の2時間以上前には到着**, followed by **到着目安時間は各航空会社のチェックイン開始時間によって変わります。事前に確認をして、余裕を持って空港へ到着しましょう。**
+Official international departure steps: https://tokyo-haneda.com/flight/int/dep_step.html
 
-The website therefore cites the airport's **at least 2 hours before international departure** guideline while prioritizing the traveler's airline instructions, terminal and check-in/bag-drop deadlines. It adds explicit time for luggage collection, walking, queues, transfers and possible delay; this is planning advice, not an official fixed margin or a guarantee.
+Haneda's page presents **T2 and T3** international departure procedures. It instructs passengers to confirm their airline counter and complete check-in early, and says counters may change on the day. The page does **not** supply a universal three-hours-before-departure requirement; the guide does not attribute one to it.
+
+For the user-requested **00:00 assumption**, the page explicitly uses the following **editorial planning example**, not a confirmed flight or personal last-safe-departure:
+
+1. Assume the flight leaves **November 2 at 00:00 JST**, so the trip to the airport is on **November 1 evening**.
+2. Provisionally aim to reach the correct terminal by **21:00**, allowing three hours. This is a planning allowance, **not an airport-wide rule**. Airline check-in/bag-drop/security/boarding instructions take precedence.
+3. Example: station **19:15** bus → **T2 19:57 / T1 20:02 / T3 20:09** scheduled arrivals. Additional time is required before that departure for leaving the event, collecting luggage, walking and queueing; traffic and full-bus contingencies also matter. No exact latest time to leave a hall is asserted.
+4. The event's planned **21:00 close coincides with that provisional airport arrival target**. The example requires leaving before the event ends and cannot also promise full attendance.
+
+Once the real flight date, terminal and airline are known, recalculate the plan. No earlier airport's terminal or timing rule is reused.

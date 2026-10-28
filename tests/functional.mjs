@@ -7,6 +7,7 @@ import path from 'node:path';
 import { once } from 'node:events';
 import { createServer, root } from '../scripts/serve.mjs';
 import { eventData } from '../data/events.js';
+import { selectMap } from './map-controls.mjs';
 
 const require = createRequire(import.meta.url);
 let chromium;
@@ -113,17 +114,17 @@ try {
   assert.match(officialICS, /SUMMARY:主題演講/);
   pass('official program bookmarks persist and calendar export retains correct JST times in a non-Japan browser timezone');
   await page.locator('[data-location="main-stage"]').first().click();
-  await page.locator('#map-select').waitFor();
-  assert.equal(await page.locator('#map-select').inputValue(), 'hall4-6');
+  await page.locator('#map-canvas[data-map-id]').waitFor();
+  assert.equal(await page.locator('#map-canvas').getAttribute('data-map-id'), 'hall4-6');
   assert.match(await page.locator('#map-selection').innerText(), /ステージ/);
   assert.equal(await page.locator('.map-pin.selected').count(), 1);
   pass('stage location links select and highlight the official main-stage location');
-  await page.locator('#map-select').selectOption('messe-entire');
+  await selectMap(page, 'messe-entire');
   assert.equal(await page.locator('#map-original').getAttribute('href'), 'https://fanfest.finalfantasyxiv.com/2026/jp/_next/static/media/messe_entire.f6fe34fd.jpg');
   for (const map of eventData.maps) {
     assert.ok(map.width > 1000 && map.height > 1000);
     assert.match(map.source, /^https:\/\/fanfest\.finalfantasyxiv\.com\/2026\/jp\/_next\/static\/media\//);
-    await page.locator('#map-select').selectOption(map.id);
+    await selectMap(page, map.id);
     await page.locator('#venue-map').evaluate(img => img.decode());
     const size = await page.locator('#venue-map').evaluate(img => ({width:img.naturalWidth,height:img.naturalHeight}));
     assert.equal(size.width, map.width); assert.equal(size.height, map.height);
@@ -136,7 +137,7 @@ try {
     }
   }
   pass('all six official original maps load at recorded dimensions with valid linked hotspots');
-  await page.locator('#map-select').selectOption('hall1-3');
+  await selectMap(page, 'hall1-3');
   await page.locator('.map-pin[data-activity="activity-nice-head"]').click();
   assert.match(await page.locator('#map-selection').innerText(), /ナイスヘッド・ガーデン/);
   await page.locator('.same-location [data-activity="activity-allagan"]').click();
@@ -153,7 +154,7 @@ try {
   assert.equal(await page.locator('#zoom-label').innerText(), '100%');
   assert.equal(await page.locator('[data-zoom="-25"]').isDisabled(), true);
   pass('shared Makuhari #6 resolves both activities through pins, index and sibling links; zoom/reset stays in bounds');
-  await page.locator('#map-select').selectOption('toyosuna');
+  await selectMap(page, 'toyosuna');
   await page.locator('.map-pin[data-activity="food-eorzea-cafe"]').click();
   const food = eventData.activities.find(a => a.id === 'food-eorzea-cafe');
   assert.ok((await page.locator('#map-selection').innerText()).includes(food.title.ja));
@@ -225,8 +226,8 @@ try {
   assert.equal(await page.locator('.activity-accordion').count(), 1);
   await page.locator('.activity-accordion summary').click();
   await page.locator('[data-location="activity-nice-head"]').click();
-  await page.locator('#map-select').waitFor();
-  assert.equal(await page.locator('#map-select').inputValue(), 'hall1-3');
+  await page.locator('#map-canvas[data-map-id]').waitFor();
+  assert.equal(await page.locator('#map-canvas').getAttribute('data-map-id'), 'hall1-3');
   assert.match(await page.locator('#map-selection').innerText(), /ナイスヘッド/);
   await route('activities');
   await page.locator('#activity-search').fill('39');
@@ -394,7 +395,7 @@ try {
     for (const name of ['map', 'activities', 'tldr']) {
       await route(name);
       if (name === 'map') {
-        await page.locator('#map-select').selectOption('hall1-3');
+        await selectMap(page, 'hall1-3');
         await page.locator('#venue-map').evaluate(img => img.decode());
         await page.locator('.legend-row[data-activity="activity-nice-head"]').click();
       }

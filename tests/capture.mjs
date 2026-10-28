@@ -7,6 +7,7 @@ import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { once } from 'node:events';
 import { createServer, root } from '../scripts/serve.mjs';
+import { selectMap } from './map-controls.mjs';
 
 const require = createRequire(import.meta.url);
 let chromium;
@@ -52,7 +53,7 @@ try {
       await capture('tldr');
       await page.locator('#navigation a[href="#map"]').click();
       for(const id of ['hall1-3','messe-entire','toyosuna']) {
-        await page.locator('#map-select').selectOption(id);
+        await selectMap(page, id);
         await page.locator('#venue-map').evaluate(img=>img.decode());
         const numbers=(await page.locator('.legend-row .map-number').allTextContents()).map(Number).filter(Number.isFinite);
         assert.deepEqual(numbers,[...numbers].sort((a,b)=>a-b));

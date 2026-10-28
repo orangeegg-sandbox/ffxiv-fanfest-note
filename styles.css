@@ -1203,15 +1203,6 @@ footer p {
 .activity-accordion .activity-title {
   display: none;
 }
-.map-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-.map-toolbar select {
-  max-width: 100%;
-}
 .map-workspace {
   display: grid;
   grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr);
@@ -1437,19 +1428,6 @@ footer p {
   .venue-strip small {
     font-size: 11px;
   }
-  .map-toolbar {
-    gap: 9px;
-  }
-  .map-toolbar label {
-    font-size: 13px;
-  }
-  .map-toolbar select {
-    width: 100%;
-    font-size: 14px;
-  }
-  .map-toolbar > a {
-    margin-left: auto;
-  }
   .map-workspace {
     gap: 0;
   }
@@ -1525,9 +1503,6 @@ footer p {
 .map-controls .button {
   min-width: 44px;
 }
-.map-toolbar select {
-  min-width: 0;
-}
 /* Keep original official numbering visible; only the selected position gets a badge.
    The list supplies large equivalent controls for dense map regions. */
 .map-canvas {
@@ -1569,9 +1544,6 @@ footer p {
   user-select: none;
   -webkit-user-drag: none;
 }
-.map-toolbar label {
-  font-weight: 600;
-}
 .same-location {
   padding: 0 0 22px;
   font-size: 13px;
@@ -1583,3 +1555,6 @@ footer p {
   white-space: normal;
   text-align: left;
 }
+
+.map-source-row { display: flex; justify-content: flex-end; margin: 8px 0; }
+.map-source-row a { display: inline-flex; align-items: center; min-height: 44px; }

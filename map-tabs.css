@@ -1,0 +1,156 @@
+.map-picker {
+  --map-tab-ink: #002e4b;
+  --map-tab-rail: #e4e4e2;
+  width: 100%;
+  min-width: 0;
+  margin-top: 4px;
+}
+
+.map-venue-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.map-venue-button {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.map-venue-button[aria-pressed="true"] {
+  border-bottom-color: var(--ink);
+  color: var(--ink);
+}
+
+.map-venue-button:focus-visible {
+  outline-offset: -4px;
+}
+
+.map-venue-title {
+  margin: 24px 0 16px;
+  font-size: 24px;
+  line-height: 1.45;
+}
+
+.map-area-tabs {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: 100%;
+  max-width: 800px;
+  padding: 10px 24px;
+}
+
+.map-area-tabs::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 14px;
+  background: var(--map-tab-rail);
+  transform: skewX(-22deg);
+}
+
+.map-area-tab {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  min-height: 48px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #1c262a;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.45;
+  white-space: nowrap;
+}
+
+.map-area-tab::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 3px;
+  background: transparent;
+  transform: skewX(-22deg);
+  transition: background-color 0.18s ease;
+}
+
+.map-area-tab:hover,
+.map-area-tab:active {
+  background: transparent;
+}
+
+.map-area-tab:hover::before {
+  background: #d1d7da;
+}
+
+.map-area-tab[aria-selected="true"] {
+  color: #fff;
+}
+
+.map-area-tab[aria-selected="true"]::before {
+  background: var(--map-tab-ink);
+}
+
+.map-area-tab:focus-visible {
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+@media (max-width: 600px) {
+  .map-venue-choices {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .map-venue-button {
+    padding-inline: 3px;
+    font-size: 13px;
+  }
+
+  .map-venue-title {
+    margin-top: 20px;
+    font-size: 23px;
+  }
+
+  .map-area-tabs {
+    padding: 8px 14px;
+  }
+
+  .map-area-tabs::before {
+    inset-inline: 15px;
+  }
+
+  .map-area-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    padding: 7px 2px;
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  .map-tab-name {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-area-tab::before {
+    transition: none;
+  }
+}

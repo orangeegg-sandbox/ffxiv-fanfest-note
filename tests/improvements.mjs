@@ -16,7 +16,9 @@ const origin = `http://127.0.0.1:${server.address().port}/fanfest/`;
 const context = await browser.newContext({ viewport: { width: 390, height: 844 }, timezoneId: 'America/Los_Angeles' });
 const page = await context.newPage();
 const errors = [];
+const failedRequests = [];
 page.on('pageerror', error => errors.push(error.message));
+context.on('requestfailed', request => failedRequests.push({ url: request.url(), error: request.failure()?.errorText }));
 let checks = 0;
 const pass = message => { checks++; console.log(`PASS ${message}`); };
 async function route(name, selector) {
@@ -116,8 +118,8 @@ try {
   await page.locator('[data-jump="apps-optional"]').click();
   assert.equal(await page.evaluate(() => document.activeElement.id), 'apps-optional');
   await page.locator('#app-instax-print [data-location]').click();
-  await page.locator('#map-select').waitFor();
-  assert.equal(await page.locator('#map-select').inputValue(), 'hall1-3');
+  await page.locator('#map-canvas[data-map-id]').waitFor();
+  assert.equal(await page.locator('#map-canvas').getAttribute('data-map-id'), 'hall1-3');
   assert.match(await page.locator('#map-selection').innerText(), /instax/);
   await page.locator('#map-selection [data-open-apps]').click();
   await page.locator('#apps-required').waitFor();
@@ -135,20 +137,33 @@ try {
       await noOverflow(`${width}px ${language} transport`);
       assert.equal(await page.locator('#navigation a[href="#map"]').getAttribute('aria-current'), 'page');
       const transport = await page.locator('.transport-guide').innerText();
-      assert.match(transport, /16:30/);
-      assert.match(transport, /16:56/);
-      assert.match(transport, /17:36/);
-      assert.match(transport, /空港第2ビル/);
-      assert.match(transport, /蘇我/);
+      assert.match(transport, /18:35/);
+      assert.match(transport, /22:45/);
+      assert.match(transport, /羽田/);
+      assert.doesNotMatch(transport, /成田|空港第2ビル/);
+      assert.match(transport, /京急|モノレール/);
       await route('tldr', '[data-tldr-view="apps"]');
     }
   }
-  pass('bilingual app and transport guides fit phones/desktops and explain Narita T2 arrivals, last buses and rail transfers');
+  pass('bilingual app and transport guides fit phones/desktops and explain Haneda terminal arrivals, distinct last buses and rail transfers');
 
-  await page.evaluate(async () => {
-    await navigator.serviceWorker.ready;
-    if (!navigator.serviceWorker.controller) await new Promise(resolve => navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true }));
-  });
+  // A failed installation leaves serviceWorker.ready pending indefinitely.
+  // Bound the wait and report installation/cache state instead of hanging CI.
+  try {
+    await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller), undefined, { timeout: 30000 });
+  } catch (cause) {
+    const workerState = await page.evaluate(async () => ({
+      registrations: (await navigator.serviceWorker.getRegistrations()).map(registration => ({
+        scope: registration.scope,
+        installing: registration.installing?.state ?? null,
+        waiting: registration.waiting?.state ?? null,
+        active: registration.active?.state ?? null,
+      })),
+      caches: await Promise.all((await caches.keys()).map(async name => ({ name, entries: (await (await caches.open(name)).keys()).length }))),
+      offlineIndicator: document.querySelector('#footer-offline')?.textContent,
+    }));
+    throw new Error(`Service worker did not control the page within 30s: ${JSON.stringify({ workerState, failedRequests, errors })}`, { cause });
+  }
   const status = await page.evaluate(() => new Promise((resolve, reject) => {
     const channel = new MessageChannel();
     const timer = setTimeout(() => reject(new Error('Cache status timed out')), 5000);
@@ -160,7 +175,7 @@ try {
   await route('transport', '.transport-guide');
   assert.equal((await page.reload()).status(), 200);
   await page.locator('.transport-guide').waitFor();
-  assert.match(await page.locator('.transport-guide').innerText(), /17:36/);
+  assert.match(await page.locator('.transport-guide').innerText(), /羽田/);
   for (const file of ['ui/schedule.js', 'ui/preparation.js', 'data/apps.js', 'data/transport.js', 'schedule.css', 'guide.css']) {
     const response = await page.evaluate(async file => { const res = await fetch('./' + file); return { status: res.status, length: (await res.text()).length }; }, file);
     assert.equal(response.status, 200, `${file} unavailable offline`);
